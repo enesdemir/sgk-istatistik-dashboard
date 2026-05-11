@@ -49,6 +49,7 @@ function Panel({
   children,
   actions,
   altBaslik,
+  glow,
 }: {
   baslik: string;
   altBaslik?: string;
@@ -56,16 +57,19 @@ function Panel({
   className?: string;
   children: React.ReactNode;
   actions?: React.ReactNode;
+  /** Renkli neon halo — önemli paneller için */
+  glow?: 'ok' | 'info' | 'warn' | 'bad';
 }) {
   return (
     <section
       className={cn(
-        'relative flex min-h-0 flex-col overflow-hidden rounded-2xl border bg-bg-surface shadow-card',
-        durum === 'bad'
-          ? 'border-signal-bad/25'
-          : durum === 'warn'
-            ? 'border-signal-warn/25'
-            : 'border-border',
+        'card',
+        durum === 'bad' && !glow && 'border-signal-bad/25',
+        durum === 'warn' && !glow && 'border-signal-warn/25',
+        glow === 'ok' && 'glow-ok',
+        glow === 'info' && 'glow-info',
+        glow === 'warn' && 'glow-warn',
+        glow === 'bad' && 'glow-bad',
         className,
       )}
     >
@@ -89,16 +93,16 @@ function Panel({
 /** ───────────────── Aktüeryal Fazla — ana headline kartı ───────────────── */
 function HeadlineCard({ deger }: { deger: number }) {
   return (
-    <Panel baslik="Aktüeryal Fazla" altBaslik="Yıl içi gelir-gider farkı" durum="ok">
+    <Panel baslik="Aktüeryal Fazla" altBaslik="Yıl içi gelir-gider farkı" durum="ok" glow="ok">
       <div className="flex flex-1 flex-col justify-between gap-2 px-4 py-3">
         <div className="flex items-baseline justify-between gap-2">
           <div className="flex items-baseline gap-1">
-            <span className="font-display text-3xl font-black tabular-nums text-signal-ok">
+            <span className="font-display text-3xl font-black tabular-nums gradient-text-ok drop-shadow-[0_0_18px_rgba(16,185,129,0.45)]">
               +<AnimatedNumber value={deger} duration={700} format={(n) => n.toFixed(1)} />
             </span>
             <span className="text-[11px] font-mono text-ink-dim">mlr ₺</span>
           </div>
-          <span className="flex items-center gap-1 rounded-full bg-signal-ok/15 px-2 py-0.5 text-[10px] font-semibold text-signal-ok">
+          <span className="flex items-center gap-1 rounded-full bg-signal-ok/15 px-2 py-0.5 text-[10px] font-semibold text-signal-ok ring-1 ring-inset ring-signal-ok/30">
             <ArrowUpRight size={11} strokeWidth={2.6} /> %18.4 YoY
           </span>
         </div>
@@ -108,7 +112,7 @@ function HeadlineCard({ deger }: { deger: number }) {
               initial={{ width: 0 }}
               animate={{ width: '109%' }}
               transition={{ duration: 1, ease: 'easeOut' }}
-              className="h-1.5 rounded-full bg-gradient-to-r from-signal-ok to-signal-info"
+              className="h-1.5 rounded-full bg-gradient-to-r from-signal-ok via-emerald-400 to-signal-info shadow-[0_0_8px_rgba(16,185,129,0.6)]"
               style={{ maxWidth: '100%' }}
             />
           </div>
@@ -138,19 +142,36 @@ function MiniKpi({
   const TrendIcon = yon === 'up' ? ArrowUpRight : ArrowDownRight;
   const trendColor = yon === 'up' ? 'text-signal-ok' : 'text-signal-bad';
   return (
-    <div className="flex h-full flex-col justify-between rounded-xl border border-border bg-bg-surface px-3 py-2.5 shadow-card">
-      <div className="flex items-center justify-between text-ink-dim">
+    <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-xl border border-border bg-bg-surface px-3 py-2.5 shadow-card">
+      {/* Hafif iç parlama */}
+      <div
+        className="pointer-events-none absolute -right-6 -top-6 h-16 w-16 rounded-full opacity-30 blur-2xl"
+        style={{
+          background:
+            yon === 'up'
+              ? 'rgb(var(--signal-ok))'
+              : 'rgb(var(--signal-bad))',
+        }}
+      />
+      <div className="relative flex items-center justify-between text-ink-dim">
         <Icon size={13} strokeWidth={2.1} />
         <TrendIcon size={12} strokeWidth={2.4} className={trendColor} />
       </div>
-      <div className="mt-1">
-        <div className="font-display text-xl font-bold tabular-nums text-ink">
+      <div className="relative mt-1">
+        <div
+          className={cn(
+            'font-display text-xl font-bold tabular-nums',
+            yon === 'up' ? 'text-ink' : 'text-ink',
+          )}
+        >
           <AnimatedNumber value={deger} duration={650} format={format} />
         </div>
         <div className="mt-0.5 text-[10px] font-medium uppercase tracking-wider text-ink-dim">
           {baslik}
         </div>
-        {altMetin && <div className="mt-0.5 truncate text-[10px] text-ink-muted">{altMetin}</div>}
+        {altMetin && (
+          <div className="relative mt-0.5 truncate text-[10px] text-ink-muted">{altMetin}</div>
+        )}
       </div>
     </div>
   );
@@ -162,7 +183,7 @@ function ProvCounter({ anlik, bugun }: { anlik: number; bugun: number }) {
     <div className="grid h-full grid-rows-[1fr_auto] gap-2 px-3 py-2.5">
       <div className="flex flex-col items-start justify-center">
         <div className="flex items-baseline gap-1.5">
-          <span className="font-display text-3xl font-black tabular-nums text-ink">
+          <span className="font-display text-3xl font-black tabular-nums gradient-text-info drop-shadow-[0_0_16px_rgba(6,182,212,0.55)]">
             <AnimatedNumber value={anlik} duration={500} format={(n) => fmtNum(Math.round(n))} />
           </span>
           <span className="text-[10px] font-mono uppercase text-ink-dim">anlık</span>
@@ -230,13 +251,20 @@ function StreamChart({ data }: { data: StreamPoint[] }) {
       <AreaChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
         <defs>
           <linearGradient id="strmGelir" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#10b981" stopOpacity={0.6} />
+            <stop offset="0%" stopColor="#10b981" stopOpacity={0.75} />
             <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="strmGider" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#ef4444" stopOpacity={0.5} />
+            <stop offset="0%" stopColor="#ef4444" stopOpacity={0.62} />
             <stop offset="100%" stopColor="#ef4444" stopOpacity={0} />
           </linearGradient>
+          <filter id="strmGlow">
+            <feGaussianBlur stdDeviation="1.2" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
         <CartesianGrid stroke="rgb(var(--ink) / 0.06)" strokeDasharray="2 4" vertical={false} />
         <XAxis dataKey="t" hide />
@@ -263,20 +291,22 @@ function StreamChart({ data }: { data: StreamPoint[] }) {
           dataKey="gider"
           name="Gider"
           stroke="#ef4444"
-          strokeWidth={1.8}
+          strokeWidth={2.2}
           fill="url(#strmGider)"
           isAnimationActive={false}
           dot={false}
+          style={{ filter: 'url(#strmGlow)' }}
         />
         <Area
           type="monotone"
           dataKey="gelir"
           name="Gelir"
           stroke="#10b981"
-          strokeWidth={2}
+          strokeWidth={2.5}
           fill="url(#strmGelir)"
           isAnimationActive={false}
           dot={false}
+          style={{ filter: 'url(#strmGlow)' }}
         />
       </AreaChart>
     </ResponsiveContainer>
@@ -290,11 +320,11 @@ function EmeklilikTrend() {
       <AreaChart data={yeniEmekliSeri} margin={{ top: 8, right: 6, left: -18, bottom: 0 }}>
         <defs>
           <linearGradient id="emkSig" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.55} />
+            <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.7} />
             <stop offset="100%" stopColor="#06b6d4" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="emkEm" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#a855f7" stopOpacity={0.5} />
+            <stop offset="0%" stopColor="#a855f7" stopOpacity={0.65} />
             <stop offset="100%" stopColor="#a855f7" stopOpacity={0} />
           </linearGradient>
         </defs>
@@ -496,13 +526,14 @@ function ScadaDashboard({ s, a }: { s: ScadaState; a: LiveActivity }) {
     >
       {/* ───── ÜST: Harita + KPI strip ───── */}
       <div className="grid min-h-0 gap-3 lg:grid-cols-[1.7fr_1fr]">
-        {/* Türkiye haritası — geniş + radar pulse'lar */}
+        {/* Türkiye haritası — geniş + radar pulse'lar + renk halosu */}
         <Panel
           baslik="Türkiye Anlık İşlem Haritası"
           altBaslik={`${a.pulses.length} aktif sinyal · radar mod`}
           durum="info"
+          glow="info"
           actions={
-            <span className="flex items-center gap-1.5 font-mono text-[10px] text-signal-info">
+            <span className="flex items-center gap-1.5 rounded-full bg-signal-info/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-signal-info pill-live-glow">
               <Radio size={10} className="animate-pulse" />
               SİNYAL
             </span>
@@ -559,7 +590,7 @@ function ScadaDashboard({ s, a }: { s: ScadaState; a: LiveActivity }) {
             <Panel baslik="Aktif/Pasif Oranı" durum="ok">
               <AktifPasifGauge deger={s.aktifPasif} />
             </Panel>
-            <Panel baslik="Provizyon · Canlı" durum="info">
+            <Panel baslik="Provizyon · Canlı" durum="info" glow="info">
               <ProvCounter anlik={s.provizyonAnlik} bugun={s.provizyonBugun} />
             </Panel>
           </div>
@@ -572,9 +603,10 @@ function ScadaDashboard({ s, a }: { s: ScadaState; a: LiveActivity }) {
           baslik="Gelir vs Gider · Canlı Akış"
           altBaslik="mlr ₺ — son 60 tick"
           durum="ok"
+          glow="ok"
           actions={
-            <span className="flex items-center gap-1.5 font-mono text-[10px] text-signal-info">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal-info" />
+            <span className="flex items-center gap-1.5 rounded-full bg-signal-ok/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-signal-ok pill-live-glow">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal-ok" />
               LIVE
             </span>
           }
@@ -588,6 +620,7 @@ function ScadaDashboard({ s, a }: { s: ScadaState; a: LiveActivity }) {
           baslik="Anlık İşlem Akışı"
           altBaslik={`${fmtNum(a.tps)} işlem/sn · gerçek zamanlı`}
           durum="info"
+          glow="info"
           actions={
             <span className="flex items-center gap-1.5 font-mono text-[10px] text-signal-info">
               <span className="relative inline-flex h-1.5 w-1.5">
@@ -648,9 +681,9 @@ function ScadaHeaderInternal({ s, a }: { s: ScadaState; a: LiveActivity }) {
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <span className="font-display text-base font-bold leading-none tracking-tight text-ink">
-              Sosyal Güvenlik Kurumu · <span className="text-signal-info">Genel Durum</span>
+              Sosyal Güvenlik Kurumu · <span className="gradient-text-brand">Genel Durum</span>
             </span>
-            <span className="hidden items-center gap-1 rounded-full bg-signal-info/15 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-signal-info sm:inline-flex">
+            <span className="hidden items-center gap-1 rounded-full bg-signal-info/15 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-signal-info pill-live-glow sm:inline-flex">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal-info" />
               CANLI
             </span>
@@ -707,10 +740,10 @@ function ScadaHeaderInternal({ s, a }: { s: ScadaState; a: LiveActivity }) {
 /** Header ortasında büyük TPS sayacı + bugün toplamı */
 function TpsTicker({ tps, totalToday }: { tps: number; totalToday: number }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-signal-info/30 bg-signal-info/[0.06] px-3 py-1.5">
+    <div className="relative flex items-center gap-3 rounded-xl border border-signal-info/35 bg-gradient-to-br from-signal-info/[0.10] via-transparent to-transparent px-3 py-1.5 shadow-[0_0_24px_-6px_rgb(var(--signal-info)/0.45)]">
       <Radio size={14} className="animate-pulse text-signal-info" />
       <div className="flex items-baseline gap-1.5">
-        <span className="font-display text-xl font-black tabular-nums text-signal-info">
+        <span className="font-display text-xl font-black tabular-nums gradient-text-info drop-shadow-[0_0_10px_rgba(6,182,212,0.55)]">
           <AnimatedNumber value={tps} duration={250} format={fmtNum} />
         </span>
         <span className="font-mono text-[10px] uppercase tracking-wider text-ink-dim">
