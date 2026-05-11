@@ -66,7 +66,8 @@ export function TurkeyHeatmap({ veri, metric = 'yogunluk' }: TurkeyHeatmapProps)
 
   useEffect(() => {
     let alive = true;
-    fetch('/geo/tr-cities.json')
+    // Vite base path destekli: dev'de "/" , prod'da "/sgk-istatistik-dashboard/" prefix'i alır
+    fetch(`${import.meta.env.BASE_URL}geo/tr-cities.json`)
       .then((r) => r.json())
       .then((d: GeoJson) => {
         if (alive) setGeo(d);
