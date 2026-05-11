@@ -102,13 +102,17 @@ export const istisnaiBasvurular = {
   oncekiAyOran: 3.9,
 };
 
-/** Sağlık harcaması kurumsal dağılım (milyar ₺ / Nisan 2026) */
+/**
+ * Sağlık harcaması kalemleri (milyar ₺ / Nisan 2026).
+ * Ana gruplar: Hastane (devlet/üniv/özel), Eczane (ilaç), Sağlık (aile hekimliği + diğer).
+ */
 export const saglikDagilim: SaglikDagilim[] = [
-  { kurum: 'Devlet Hastanesi', tutar: 22.4, yuzde: 43.1, renk: '#3b6bf5' },
-  { kurum: 'Üniversite Hastanesi', tutar: 11.8, yuzde: 22.7, renk: '#06b6d4' },
-  { kurum: 'Özel Hastane', tutar: 14.6, yuzde: 28.1, renk: '#f59e0b' },
-  { kurum: 'Aile Hekimliği', tutar: 1.9, yuzde: 3.7, renk: '#10b981' },
-  { kurum: 'Diğer', tutar: 1.2, yuzde: 2.4, renk: '#94a3b8' },
+  { kurum: 'Devlet Hastanesi', tutar: 22.4, yuzde: 28.3, renk: '#3b6bf5', grup: 'Hastane' },
+  { kurum: 'Üniversite Hastanesi', tutar: 11.8, yuzde: 14.9, renk: '#06b6d4', grup: 'Hastane' },
+  { kurum: 'Özel Hastane', tutar: 14.6, yuzde: 18.4, renk: '#f59e0b', grup: 'Hastane' },
+  { kurum: 'Eczane (ilaç)', tutar: 19.8, yuzde: 25.0, renk: '#a855f7', grup: 'Eczane' },
+  { kurum: 'Aile Hekimliği', tutar: 6.4, yuzde: 8.1, renk: '#10b981', grup: 'Sağlık' },
+  { kurum: 'Lab / Görüntüleme / Diğer', tutar: 4.2, yuzde: 5.3, renk: '#94a3b8', grup: 'Sağlık' },
 ];
 
 export const kronikKalemler: KronikKalem[] = [

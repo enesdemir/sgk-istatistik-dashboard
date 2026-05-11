@@ -326,52 +326,82 @@ function EmeklilikTrend() {
   );
 }
 
-/** ───────────────── Kurumsal Sağlık Donut ───────────────── */
-function SaglikDonut() {
-  const toplam = useMemo(() => saglikDagilim.reduce((s, r) => s + r.tutar, 0), []);
+/** ───────────────── Sağlık · Hastane/Eczane/Sağlık ana grup özetleri + kalemler ───────────────── */
+const SAGLIK_GRUP_RENK: Record<'Hastane' | 'Eczane' | 'Sağlık', string> = {
+  Hastane: '#3b6bf5',
+  Eczane: '#a855f7',
+  Sağlık: '#10b981',
+};
+
+function SaglikDagilimPanel() {
+  const { gruplar, max } = useMemo(() => {
+    const m: Record<'Hastane' | 'Eczane' | 'Sağlık', number> = {
+      Hastane: 0,
+      Eczane: 0,
+      Sağlık: 0,
+    };
+    saglikDagilim.forEach((d) => {
+      m[d.grup] += d.tutar;
+    });
+    return {
+      gruplar: m,
+      max: Math.max(...saglikDagilim.map((d) => d.tutar)),
+    };
+  }, []);
+
   return (
-    <div className="relative grid h-full grid-cols-[1.1fr_1fr] items-center gap-2 px-3 py-2">
-      <div className="relative h-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={saglikDagilim}
-              dataKey="tutar"
-              nameKey="kurum"
-              innerRadius="58%"
-              outerRadius="90%"
-              paddingAngle={2}
-              stroke="rgb(var(--bg-surface))"
-              strokeWidth={2}
-            >
-              {saglikDagilim.map((d, i) => (
-                <Cell key={i} fill={d.renk} />
-              ))}
-            </Pie>
-            <Tooltip formatter={(v: number) => `${v.toFixed(1)} mlr ₺`} />
-          </PieChart>
-        </ResponsiveContainer>
-        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-display text-base font-bold text-ink tabular-nums">
-            {toplam.toFixed(1)}
-          </span>
-          <span className="text-[8px] font-mono uppercase tracking-wider text-ink-dim">
-            mlr ₺/ay
-          </span>
-        </div>
-      </div>
-      <ul className="flex flex-col gap-0.5">
-        {saglikDagilim.map((d) => (
-          <li key={d.kurum} className="flex items-center justify-between gap-1 text-[10px]">
-            <div className="flex items-center gap-1.5 min-w-0">
+    <div className="flex h-full min-h-0 flex-col gap-2 px-3 py-2">
+      {/* Üst: 3 ana grup özet — rakam odaklı */}
+      <div className="grid shrink-0 grid-cols-3 gap-1.5">
+        {(['Hastane', 'Eczane', 'Sağlık'] as const).map((g) => (
+          <div
+            key={g}
+            className="rounded-md border border-border bg-bg-elevated px-2 py-1.5"
+          >
+            <div className="flex items-center gap-1 text-[9px] font-medium uppercase tracking-wider text-ink-dim">
               <span
-                className="h-2 w-2 shrink-0 rounded-sm"
-                style={{ background: d.renk }}
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ background: SAGLIK_GRUP_RENK[g] }}
               />
-              <span className="truncate text-ink">{d.kurum}</span>
+              {g}
             </div>
-            <span className="font-mono font-semibold text-ink-muted">
-              {fmtPct(d.yuzde)}
+            <div className="mt-0.5 flex items-baseline gap-1">
+              <span className="font-display text-base font-bold tabular-nums text-ink">
+                {gruplar[g].toFixed(1)}
+              </span>
+              <span className="text-[9px] font-mono text-ink-dim">mlr ₺</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Alt: kalem bazlı liste — her satır rakam + relative bar */}
+      <ul className="flex min-h-0 flex-1 flex-col gap-1 overflow-hidden">
+        {saglikDagilim.map((d) => (
+          <li
+            key={d.kurum}
+            className="grid grid-cols-[auto_1fr_auto] items-center gap-2 text-[10px]"
+          >
+            <span
+              className="h-2 w-2 shrink-0 rounded-sm"
+              style={{ background: d.renk }}
+            />
+            <div className="min-w-0">
+              <div className="truncate text-ink">{d.kurum}</div>
+              <div className="mt-0.5 h-1 overflow-hidden rounded-full bg-bg-elevated">
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${(d.tutar / max) * 100}%`,
+                    background: d.renk,
+                    opacity: 0.85,
+                  }}
+                />
+              </div>
+            </div>
+            <span className="shrink-0 font-mono text-[11px] font-semibold tabular-nums text-ink">
+              {d.tutar.toFixed(1)}{' '}
+              <span className="text-[9px] font-normal text-ink-dim">mlr ₺</span>
             </span>
           </li>
         ))}
@@ -531,11 +561,11 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
         </Panel>
 
         <Panel
-          baslik="Sağlık · Kurumsal Dağılım"
-          altBaslik={`Aylık toplam ${saglikDagilim.reduce((a, b) => a + b.tutar, 0).toFixed(1)} mlr ₺`}
+          baslik="Sağlık Harcamaları"
+          altBaslik={`Aylık toplam ${saglikDagilim.reduce((a, b) => a + b.tutar, 0).toFixed(1)} mlr ₺ · Hastane / Eczane / Sağlık`}
           durum="warn"
         >
-          <SaglikDonut />
+          <SaglikDagilimPanel />
         </Panel>
 
         <Panel

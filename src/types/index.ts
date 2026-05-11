@@ -40,11 +40,14 @@ export interface YeniEmekliSerisi {
   eyt: number;
 }
 
+export type SaglikGrup = 'Hastane' | 'Eczane' | 'Sağlık';
+
 export interface SaglikDagilim {
   kurum: string;
-  tutar: number;
+  tutar: number; // mlr ₺/ay
   yuzde: number;
   renk: string;
+  grup: SaglikGrup;
 }
 
 export interface KronikKalem {
