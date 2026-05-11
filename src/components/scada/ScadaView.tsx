@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   Activity,
   ArrowDownRight,
@@ -6,6 +6,8 @@ import {
   Banknote,
   CircleDollarSign,
   HeartPulse,
+  MapPin,
+  Radio,
   Scale,
   Users,
   Zap,
@@ -34,9 +36,10 @@ import {
   saglikDagilim,
   yeniEmekliSeri,
 } from '@/data/mockData';
+import { useLiveActivity, type LiveActivity, type Transaction } from '@/hooks/useLiveActivity';
 import { useScadaData, type AlarmEvent, type ScadaState, type StreamPoint } from '@/hooks/useScadaData';
 import { cn } from '@/lib/cn';
-import { fmtCompact, fmtNum, fmtPct } from '@/lib/format';
+import { fmtCompact, fmtNum, fmtPct, fmtTL } from '@/lib/format';
 
 /** ───────────────── Panel kabı — sade SGK üslubu ───────────────── */
 function Panel({
@@ -380,6 +383,60 @@ function SaglikDonut() {
   );
 }
 
+/** ───────────────── Anlık İşlem Akışı — saniye altı yeni satır ───────────────── */
+const TX_BADGE: Record<Transaction['tip'], string> = {
+  Provizyon: 'bg-signal-info/15 text-signal-info',
+  Prim: 'bg-signal-ok/15 text-signal-ok',
+  Tahsilat: 'bg-signal-ok/15 text-signal-ok',
+  Yapılandırma: 'bg-signal-warn/15 text-signal-warn',
+  Denetim: 'bg-signal-bad/15 text-signal-bad',
+};
+
+function IslemAkisi({ transactions }: { transactions: Transaction[] }) {
+  return (
+    <ul className="flex h-full min-h-0 flex-col gap-1 overflow-hidden px-2 py-2 text-[11px]">
+      <AnimatePresence initial={false}>
+        {transactions.slice(0, 9).map((tx) => (
+          <motion.li
+            key={tx.id}
+            initial={{ opacity: 0, x: -10, height: 0, marginTop: 0 }}
+            animate={{ opacity: 1, x: 0, height: 'auto', marginTop: 0 }}
+            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+            className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-2 overflow-hidden rounded-md border border-border bg-bg-elevated px-2 py-1.5"
+          >
+            <MapPin
+              size={11}
+              strokeWidth={2.2}
+              className={cn(
+                tx.level === 'bad'
+                  ? 'text-signal-bad'
+                  : tx.level === 'warn'
+                    ? 'text-signal-warn'
+                    : tx.level === 'ok'
+                      ? 'text-signal-ok'
+                      : 'text-signal-info',
+              )}
+            />
+            <span className="truncate text-ink">{tx.il}</span>
+            <span
+              className={cn(
+                'rounded-sm px-1.5 py-0.5 text-[9px] font-mono font-semibold uppercase tracking-wider',
+                TX_BADGE[tx.tip],
+              )}
+            >
+              {tx.tip}
+            </span>
+            <span className="font-mono text-[10px] font-semibold tabular-nums text-ink-muted">
+              {tx.tutar > 0 ? fmtTL(tx.tutar) : '—'}
+            </span>
+          </motion.li>
+        ))}
+      </AnimatePresence>
+    </ul>
+  );
+}
+
 /** ───────────────── Olay Akışı (alarm log, SGK üslubu) ───────────────── */
 function OlayAkisi({ alarms }: { alarms: AlarmEvent[] }) {
   return (
@@ -417,15 +474,16 @@ function OlayAkisi({ alarms }: { alarms: AlarmEvent[] }) {
 /** ─────────────────  Ana ───────────────── */
 export function ScadaView() {
   const s = useScadaData();
+  const a = useLiveActivity();
   return (
     <>
-      <ScadaHeaderInternal s={s} />
-      <ScadaDashboard s={s} />
+      <ScadaHeaderInternal s={s} a={a} />
+      <ScadaDashboard s={s} a={a} />
     </>
   );
 }
 
-function ScadaDashboard({ s }: { s: ScadaState }) {
+function ScadaDashboard({ s, a }: { s: ScadaState; a: LiveActivity }) {
   const gelirGiderOrani = (s.gelirRate / s.giderRate) * 100;
 
   return (
@@ -438,14 +496,20 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
     >
       {/* ───── ÜST: Harita + KPI strip ───── */}
       <div className="grid min-h-0 gap-3 lg:grid-cols-[1.7fr_1fr]">
-        {/* Türkiye haritası — geniş */}
+        {/* Türkiye haritası — geniş + radar pulse'lar */}
         <Panel
-          baslik="Türkiye İl Bazlı Yoğunluk Haritası"
-          altBaslik="Saha denetimi ve harcama indeksi"
+          baslik="Türkiye Anlık İşlem Haritası"
+          altBaslik={`${a.pulses.length} aktif sinyal · radar mod`}
           durum="info"
+          actions={
+            <span className="flex items-center gap-1.5 font-mono text-[10px] text-signal-info">
+              <Radio size={10} className="animate-pulse" />
+              SİNYAL
+            </span>
+          }
         >
           <div className="min-h-0 flex-1 p-2">
-            <TurkeyHeatmap veri={ilHarita} metric="yogunluk" />
+            <TurkeyHeatmap veri={ilHarita} metric="yogunluk" pulses={a.pulses} />
           </div>
         </Panel>
 
@@ -502,8 +566,8 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
         </div>
       </div>
 
-      {/* ───── ALT: 4 canlı analiz paneli ───── */}
-      <div className="grid min-h-0 gap-3 lg:grid-cols-[1.2fr_1.1fr_1fr_0.9fr]">
+      {/* ───── ALT: 5 canlı analiz paneli — İşlem Akışı dahil ───── */}
+      <div className="grid min-h-0 gap-3 lg:grid-cols-[1.15fr_1fr_0.95fr_0.9fr_0.9fr]">
         <Panel
           baslik="Gelir vs Gider · Canlı Akış"
           altBaslik="mlr ₺ — son 60 tick"
@@ -521,6 +585,23 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
         </Panel>
 
         <Panel
+          baslik="Anlık İşlem Akışı"
+          altBaslik={`${fmtNum(a.tps)} işlem/sn · gerçek zamanlı`}
+          durum="info"
+          actions={
+            <span className="flex items-center gap-1.5 font-mono text-[10px] text-signal-info">
+              <span className="relative inline-flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal-info opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal-info" />
+              </span>
+              CANLI
+            </span>
+          }
+        >
+          <IslemAkisi transactions={a.transactions} />
+        </Panel>
+
+        <Panel
           baslik="Yeni Sigortalı vs Yeni Emekli"
           altBaslik="12 aylık demografik akış"
           durum="info"
@@ -532,7 +613,7 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
 
         <Panel
           baslik="Sağlık · Kurumsal Dağılım"
-          altBaslik={`Aylık toplam ${saglikDagilim.reduce((a, b) => a + b.tutar, 0).toFixed(1)} mlr ₺`}
+          altBaslik={`Aylık ${saglikDagilim.reduce((a, b) => a + b.tutar, 0).toFixed(1)} mlr ₺`}
           durum="warn"
         >
           <SaglikDonut />
@@ -543,7 +624,7 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
           altBaslik="Sistem & alarm günlüğü"
           durum="warn"
           actions={
-            <span className="font-mono text-[9px] text-ink-dim">{s.alarms.length} kayıt</span>
+            <span className="font-mono text-[9px] text-ink-dim">{s.alarms.length}</span>
           }
         >
           <OlayAkisi alarms={s.alarms} />
@@ -554,9 +635,9 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
 }
 
 /** ───────────────── Üst kompakt başlık çubuğu ───────────────── */
-function ScadaHeaderInternal({ s }: { s: ScadaState }) {
-  const kritikSayi = s.alarms.filter((a) => a.level === 'bad').length;
-  const uyariSayi = s.alarms.filter((a) => a.level === 'warn').length;
+function ScadaHeaderInternal({ s, a }: { s: ScadaState; a: LiveActivity }) {
+  const kritikSayi = s.alarms.filter((al) => al.level === 'bad').length;
+  const uyariSayi = s.alarms.filter((al) => al.level === 'warn').length;
 
   return (
     <header className="mb-3 flex items-center justify-between gap-3 rounded-2xl border border-border bg-bg-subtle px-4 py-2.5 shadow-card">
@@ -583,8 +664,13 @@ function ScadaHeaderInternal({ s }: { s: ScadaState }) {
         </div>
       </div>
 
+      {/* Orta: TPS — büyük rakam, sürekli oynar */}
+      <div className="hidden items-center gap-4 md:flex">
+        <TpsTicker tps={a.tps} totalToday={a.totalToday} />
+      </div>
+
       <div className="flex items-center gap-3">
-        <div className="hidden items-center gap-3 font-mono text-[11px] md:flex">
+        <div className="hidden items-center gap-2 font-mono text-[11px] lg:flex">
           <span className="flex items-center gap-1.5 rounded-full bg-signal-bad/10 px-2 py-1 text-signal-bad">
             <span className="h-1.5 w-1.5 rounded-full bg-signal-bad" />
             {kritikSayi.toString().padStart(2, '0')} kritik
@@ -615,5 +701,28 @@ function ScadaHeaderInternal({ s }: { s: ScadaState }) {
         </div>
       </div>
     </header>
+  );
+}
+
+/** Header ortasında büyük TPS sayacı + bugün toplamı */
+function TpsTicker({ tps, totalToday }: { tps: number; totalToday: number }) {
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-signal-info/30 bg-signal-info/[0.06] px-3 py-1.5">
+      <Radio size={14} className="animate-pulse text-signal-info" />
+      <div className="flex items-baseline gap-1.5">
+        <span className="font-display text-xl font-black tabular-nums text-signal-info">
+          <AnimatedNumber value={tps} duration={250} format={fmtNum} />
+        </span>
+        <span className="font-mono text-[10px] uppercase tracking-wider text-ink-dim">
+          işlem/sn
+        </span>
+      </div>
+      <div className="hidden border-l border-border pl-3 lg:block">
+        <div className="text-[9px] uppercase tracking-wider text-ink-dim">Bugün</div>
+        <div className="font-mono text-xs font-semibold tabular-nums text-ink">
+          <AnimatedNumber value={totalToday} duration={300} format={fmtNum} />
+        </div>
+      </div>
+    </div>
   );
 }
