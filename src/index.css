@@ -10,10 +10,10 @@
   :root {
     color-scheme: light;
 
-    --bg: 240 244 250;          /* body — slate-100 tonunda gri-mavi taban */
+    --bg: 236 241 248;          /* body — slate-100 gri-mavi taban */
     --bg-subtle: 255 255 255;   /* sidebar + header — saf beyaz panel */
     --bg-surface: 255 255 255;  /* card — saf beyaz */
-    --bg-elevated: 246 248 252; /* hover / ikincil yüzey */
+    --bg-elevated: 226 233 243; /* iç sub-panel — beyaz kart içinde net görünür gri-mavi tint */
 
     --border: 15 23 42;         /* slate-900, rgba alpha ile yumuşatılır */
     --border-strong: 15 23 42;
@@ -28,12 +28,12 @@
     --signal-info: 8 145 178;
 
     /* Kartların body'den ayrılması için light'ta belirgin alt gölge */
-    --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.9) inset,
-      0 1px 2px rgba(15, 23, 42, 0.04),
-      0 12px 32px -16px rgba(15, 23, 42, 0.14);
-    --shadow-card-hover: 0 1px 0 rgba(255, 255, 255, 0.9) inset,
-      0 2px 4px rgba(15, 23, 42, 0.06),
-      0 20px 44px -18px rgba(15, 23, 42, 0.22);
+    --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.95) inset,
+      0 1px 2px rgba(15, 23, 42, 0.06),
+      0 14px 36px -14px rgba(15, 23, 42, 0.20);
+    --shadow-card-hover: 0 1px 0 rgba(255, 255, 255, 0.95) inset,
+      0 2px 4px rgba(15, 23, 42, 0.08),
+      0 22px 48px -16px rgba(15, 23, 42, 0.28);
     --shadow-glow: 0 0 0 1px rgba(59, 107, 245, 0.22),
       0 8px 28px -10px rgba(59, 107, 245, 0.32);
 
