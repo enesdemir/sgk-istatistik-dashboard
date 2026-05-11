@@ -1,0 +1,299 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* LIGHT (default) -----------------------------------------------------
+   * Mantık: body slate-100 (gri-mavi tabandan), paneller (sidebar / header /
+   * card) saf beyaz. Saf beyazlık ancak body bg'den ayrışınca görünür.
+   * --------------------------------------------------------------------- */
+  :root {
+    color-scheme: light;
+
+    --bg: 240 244 250;          /* body — slate-100 tonunda gri-mavi taban */
+    --bg-subtle: 255 255 255;   /* sidebar + header — saf beyaz panel */
+    --bg-surface: 255 255 255;  /* card — saf beyaz */
+    --bg-elevated: 246 248 252; /* hover / ikincil yüzey */
+
+    --border: 15 23 42;         /* slate-900, rgba alpha ile yumuşatılır */
+    --border-strong: 15 23 42;
+
+    --ink: 15 23 42;            /* slate-900 — ana metin */
+    --ink-muted: 71 85 105;     /* slate-600 — yardımcı */
+    --ink-dim: 148 163 184;     /* slate-400 — pasif */
+
+    --signal-ok: 5 150 105;
+    --signal-warn: 217 119 6;
+    --signal-bad: 220 38 38;
+    --signal-info: 8 145 178;
+
+    /* Kartların body'den ayrılması için light'ta belirgin alt gölge */
+    --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.9) inset,
+      0 1px 2px rgba(15, 23, 42, 0.04),
+      0 12px 32px -16px rgba(15, 23, 42, 0.14);
+    --shadow-card-hover: 0 1px 0 rgba(255, 255, 255, 0.9) inset,
+      0 2px 4px rgba(15, 23, 42, 0.06),
+      0 20px 44px -18px rgba(15, 23, 42, 0.22);
+    --shadow-glow: 0 0 0 1px rgba(59, 107, 245, 0.22),
+      0 8px 28px -10px rgba(59, 107, 245, 0.32);
+
+    /* Radial mavi blob'lar — light'ta neredeyse görünmez */
+    --bg-blob-1: rgba(59, 107, 245, 0.04);
+    --bg-blob-2: rgba(6, 182, 212, 0.03);
+
+    /* Recharts */
+    --grid: rgba(15, 23, 42, 0.06);
+    --axis-text: rgb(100 116 139);
+    --tooltip-bg: rgba(255, 255, 255, 0.98);
+    --tooltip-border: rgba(15, 23, 42, 0.10);
+
+    /* Card üzerinde çok hafif beyaz sheen (zaten beyaz kart üzerinde no-op) */
+    --sheen-1: rgba(255, 255, 255, 0.6);
+    --sheen-2: transparent;
+
+    --gradient-text-from: #2851e6;
+    --gradient-text-to: #0891b2;
+
+    --map-stroke: rgba(255, 255, 255, 0.95);
+    --map-stroke-hover: rgba(15, 23, 42, 0.95);
+  }
+
+  /* DARK ---------------------------------------------------------------- */
+  :root.dark {
+    color-scheme: dark;
+
+    --bg: 10 14 26;
+    --bg-subtle: 15 20 36;
+    --bg-surface: 20 26 46;
+    --bg-elevated: 26 33 56;
+
+    --border: 148 163 184;
+    --border-strong: 148 163 184;
+
+    --ink: 231 236 243;
+    --ink-muted: 148 163 184;
+    --ink-dim: 100 116 139;
+
+    --signal-ok: 16 185 129;
+    --signal-warn: 245 158 11;
+    --signal-bad: 239 68 68;
+    --signal-info: 6 182 212;
+
+    --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 1px 2px rgba(0, 0, 0, 0.25),
+      0 8px 24px -12px rgba(0, 0, 0, 0.45);
+    --shadow-card-hover: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 1px 2px rgba(0, 0, 0, 0.3),
+      0 16px 32px -10px rgba(0, 0, 0, 0.55);
+    --shadow-glow: 0 0 0 1px rgba(59, 107, 245, 0.35), 0 8px 32px -8px rgba(59, 107, 245, 0.55);
+
+    --bg-blob-1: rgba(59, 107, 245, 0.10);
+    --bg-blob-2: rgba(6, 182, 212, 0.08);
+
+    --grid: rgba(148, 163, 184, 0.06);
+    --axis-text: rgb(148 163 184);
+    --tooltip-bg: rgba(20, 26, 46, 0.95);
+    --tooltip-border: rgba(148, 163, 184, 0.18);
+
+    --sheen-1: rgba(255, 255, 255, 0.05);
+    --sheen-2: transparent;
+
+    --gradient-text-from: #93b4ff;
+    --gradient-text-to: #67e8f9;
+
+    --map-stroke: rgba(10, 14, 26, 0.85);
+    --map-stroke-hover: rgba(255, 255, 255, 0.95);
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-bg text-ink font-sans antialiased;
+    background-image:
+      radial-gradient(circle at 18% 0%, var(--bg-blob-1) 0%, transparent 50%),
+      radial-gradient(circle at 90% 100%, var(--bg-blob-2) 0%, transparent 50%);
+    background-attachment: fixed;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--ink-muted) / 0.18);
+    border-radius: 5px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--ink-muted) / 0.32);
+  }
+
+  ::selection {
+    background: rgba(59, 107, 245, 0.32);
+    color: rgb(var(--ink));
+  }
+}
+
+@layer components {
+  .card {
+    @apply relative overflow-hidden rounded-2xl border bg-bg-surface;
+    border-color: rgb(var(--border) / 0.08);
+    box-shadow: var(--shadow-card);
+    background-image: linear-gradient(180deg, var(--sheen-1), var(--sheen-2));
+    backdrop-filter: blur(6px);
+  }
+
+  .card-hover {
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .card-hover:hover {
+    border-color: rgb(var(--border) / 0.20);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .card-header {
+    @apply flex items-start justify-between gap-4 px-5 pt-5;
+  }
+
+  .card-title {
+    @apply text-[13px] font-medium uppercase tracking-[0.08em] text-ink-muted;
+  }
+
+  .card-subtitle {
+    @apply text-xs text-ink-dim mt-1;
+  }
+
+  .card-body {
+    @apply px-5 pb-5 pt-3;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium;
+  }
+
+  .pill-ok {
+    background: rgb(var(--signal-ok) / 0.12);
+    color: rgb(var(--signal-ok));
+    box-shadow: inset 0 0 0 1px rgb(var(--signal-ok) / 0.2);
+  }
+  .pill-warn {
+    background: rgb(var(--signal-warn) / 0.12);
+    color: rgb(var(--signal-warn));
+    box-shadow: inset 0 0 0 1px rgb(var(--signal-warn) / 0.22);
+  }
+  .pill-bad {
+    background: rgb(var(--signal-bad) / 0.12);
+    color: rgb(var(--signal-bad));
+    box-shadow: inset 0 0 0 1px rgb(var(--signal-bad) / 0.22);
+  }
+  .pill-info {
+    background: rgb(var(--signal-info) / 0.12);
+    color: rgb(var(--signal-info));
+    box-shadow: inset 0 0 0 1px rgb(var(--signal-info) / 0.22);
+  }
+  .pill-neutral {
+    background: rgb(var(--ink) / 0.05);
+    color: rgb(var(--ink-muted));
+    box-shadow: inset 0 0 0 1px rgb(var(--ink) / 0.08);
+  }
+
+  .stat-num {
+    @apply font-display text-3xl font-semibold tracking-tight text-ink tabular-nums;
+  }
+
+  .stat-num-lg {
+    @apply font-display text-4xl font-semibold tracking-tight text-ink tabular-nums;
+  }
+
+  .stat-num-xl {
+    @apply font-display text-5xl font-bold tracking-tight text-ink tabular-nums;
+  }
+
+  .grid-fade {
+    background-image: linear-gradient(rgb(var(--ink) / 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--ink) / 0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  }
+
+  .nav-link {
+    @apply flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors;
+    color: rgb(var(--ink-muted));
+  }
+  .nav-link:hover {
+    color: rgb(var(--ink));
+    background-color: rgb(var(--ink) / 0.04);
+  }
+  .nav-link-active {
+    color: rgb(var(--ink));
+    background-color: rgb(var(--ink) / 0.06);
+    box-shadow: inset 0 0 0 1px rgb(var(--ink) / 0.06);
+  }
+
+  .divider {
+    @apply h-px w-full;
+    background-image: linear-gradient(
+      to right,
+      transparent,
+      rgb(var(--border) / 0.18),
+      transparent
+    );
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--gradient-text-from) 0%, var(--gradient-text-to) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Recharts integration tweaks */
+  .recharts-default-tooltip {
+    background: var(--tooltip-bg) !important;
+    border: 1px solid var(--tooltip-border) !important;
+    border-radius: 10px !important;
+    box-shadow: var(--shadow-card) !important;
+    color: rgb(var(--ink)) !important;
+  }
+  .recharts-tooltip-label {
+    color: rgb(var(--ink-muted)) !important;
+  }
+  .recharts-tooltip-item {
+    color: rgb(var(--ink)) !important;
+  }
+
+  .recharts-cartesian-grid line {
+    stroke: var(--grid) !important;
+  }
+
+  .recharts-cartesian-axis-tick text {
+    fill: var(--axis-text) !important;
+    font-size: 11px !important;
+  }
+
+  .recharts-legend-item-text {
+    color: rgb(var(--ink-muted)) !important;
+    font-size: 12px !important;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: linear-gradient(180deg, var(--sheen-1), var(--sheen-2));
+    backdrop-filter: blur(12px);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}

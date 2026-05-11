@@ -1,0 +1,13 @@
+node_modules
+dist
+dist-ssr
+build
+.DS_Store
+.vscode/
+.idea/
+*.log
+
+# TS build artifacts
+*.tsbuildinfo
+vite.config.d.ts
+vite.config.js
