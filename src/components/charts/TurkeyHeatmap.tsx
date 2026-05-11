@@ -4,26 +4,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { fmtCompact, fmtPct } from '@/lib/format';
 import type { IlIsiHaritasi } from '@/types';
 
-interface PulseInput {
-  id: string;
-  il: string;
-  level?: 'info' | 'ok' | 'warn' | 'bad';
-}
-
 interface TurkeyHeatmapProps {
   veri: IlIsiHaritasi[];
   /** Hangi metrik üzerinden ısı (yogunluk / kayitDisi / toplamHarcama) */
   metric?: 'yogunluk' | 'kayitDisi' | 'toplamHarcama';
-  /** İl merkezlerinde radar pulse'ları — anlık işlem hissi için */
-  pulses?: PulseInput[];
 }
-
-const PULSE_COLOR: Record<NonNullable<PulseInput['level']>, string> = {
-  info: '#67e8f9',
-  ok: '#34d399',
-  warn: '#fbbf24',
-  bad: '#fb7185',
-};
 
 interface GeoJsonFeature {
   type: 'Feature';
@@ -75,7 +60,7 @@ function colorFor(value: number, max: number): string {
 const WIDTH = 720;
 const HEIGHT = 320;
 
-export function TurkeyHeatmap({ veri, metric = 'yogunluk', pulses }: TurkeyHeatmapProps) {
+export function TurkeyHeatmap({ veri, metric = 'yogunluk' }: TurkeyHeatmapProps) {
   const [geo, setGeo] = useState<GeoJson | null>(null);
   const [hover, setHover] = useState<{ il: string; x: number; y: number } | null>(null);
 
@@ -104,29 +89,16 @@ export function TurkeyHeatmap({ veri, metric = 'yogunluk', pulses }: TurkeyHeatm
     return Math.max(...vals, 1);
   }, [veri, metric]);
 
-  const { pathFn, paths, centroids } = useMemo(() => {
-    if (!geo)
-      return {
-        pathFn: null as ((f: GeoJsonFeature) => string | null) | null,
-        paths: [] as { name: string; d: string; data?: IlIsiHaritasi }[],
-        centroids: new Map<string, [number, number]>(),
-      };
-    const proj = geoMercator().fitSize(
-      [WIDTH, HEIGHT],
-      geo as unknown as GeoJSON.FeatureCollection,
-    );
+  const { pathFn, paths } = useMemo(() => {
+    if (!geo) return { pathFn: null as ((f: GeoJsonFeature) => string | null) | null, paths: [] };
+    const proj = geoMercator().fitSize([WIDTH, HEIGHT], geo as unknown as GeoJSON.FeatureCollection);
     const pf = geoPath(proj);
     const ps = geo.features.map((f) => ({
       name: f.properties.name,
       d: pf(f as unknown as GeoJSON.Feature) ?? '',
       data: byName.get(norm(f.properties.name)),
     }));
-    const c = new Map<string, [number, number]>();
-    geo.features.forEach((f) => {
-      const cent = pf.centroid(f as unknown as GeoJSON.Feature);
-      if (!Number.isNaN(cent[0])) c.set(norm(f.properties.name), [cent[0], cent[1]]);
-    });
-    return { pathFn: (f: GeoJsonFeature) => pf(f as unknown as GeoJSON.Feature), paths: ps, centroids: c };
+    return { pathFn: (f: GeoJsonFeature) => pf(f as unknown as GeoJSON.Feature), paths: ps };
   }, [geo, byName]);
 
   const hoverData = hover ? byName.get(norm(hover.il)) : undefined;
@@ -187,31 +159,6 @@ export function TurkeyHeatmap({ veri, metric = 'yogunluk', pulses }: TurkeyHeatm
               onMouseLeave={() => setHover(null)}
               style={{ cursor: 'pointer', filter: isHover ? 'url(#ilGlow)' : undefined }}
             />
-          );
-        })}
-
-        {/* Canlı radar pulse'ları — il centroidlerinde, SMIL animasyonu (1.5s yayılma) */}
-        {pulses?.map((p) => {
-          const c = centroids.get(norm(p.il));
-          if (!c) return null;
-          const col = PULSE_COLOR[p.level ?? 'info'];
-          return (
-            <g key={p.id} pointerEvents="none">
-              {/* Dış halka — geniş radar dalgası */}
-              <circle cx={c[0]} cy={c[1]} fill="none" stroke={col} strokeWidth={1.4}>
-                <animate attributeName="r" from="2" to="22" dur="1.5s" fill="freeze" />
-                <animate attributeName="opacity" from="0.9" to="0" dur="1.5s" fill="freeze" />
-              </circle>
-              {/* İç halka — daha hızlı dar dalga */}
-              <circle cx={c[0]} cy={c[1]} fill={col} fillOpacity={0.35} stroke="none">
-                <animate attributeName="r" from="1" to="10" dur="1.1s" fill="freeze" />
-                <animate attributeName="opacity" from="1" to="0" dur="1.1s" fill="freeze" />
-              </circle>
-              {/* Merkez nokta — kısa parlama */}
-              <circle cx={c[0]} cy={c[1]} r={2} fill={col}>
-                <animate attributeName="opacity" from="1" to="0" dur="0.9s" fill="freeze" />
-              </circle>
-            </g>
           );
         })}
       </svg>
