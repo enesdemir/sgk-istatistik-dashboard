@@ -39,22 +39,22 @@ function jitter(amount: number): number {
   return (Math.random() - 0.5) * 2 * amount;
 }
 
-/** Periyodik üretilen sentetik log mesajları havuzu */
+/** Periyodik üretilen sentetik log mesajları havuzu — yüzdesiz */
 const LOG_POOL: Omit<AlarmEvent, 'id' | 'time'>[] = [
   { level: 'info', source: 'SYS', message: 'Tahsilat senkronizasyonu tamamlandı' },
   { level: 'ok', source: 'PRIM', message: 'Aylık prim akışı normal seviyede' },
   { level: 'info', source: 'PROV', message: 'Provizyon servisi yanıt süresi 84 ms' },
   { level: 'warn', source: 'EMK', message: 'İstanbul dosya bağlama 42 gün (hedef 30)' },
-  { level: 'warn', source: 'SGL', message: 'Onkoloji harcama YoY +%8.3' },
-  { level: 'warn', source: 'ECZ', message: 'Reçete başı maliyet 624.80 ₺' },
-  { level: 'bad', source: 'DNT', message: 'Şanlıurfa kayıt dışı %33.4 — saha denetimi tetiklendi' },
+  { level: 'warn', source: 'SGL', message: 'Onkoloji harcama artış eğiliminde — 18.4 mlr ₺' },
+  { level: 'warn', source: 'ECZ', message: 'Reçete başı maliyet 624.80 ₺ — eşik üstü' },
+  { level: 'bad', source: 'DNT', message: 'Şanlıurfa saha denetimi tetiklendi' },
   { level: 'ok', source: 'YAP', message: 'Yapılandırma tahsilatı +14.9 mlr ₺' },
-  { level: 'info', source: 'KPS', message: 'KPS sorgulama: 12,438 başarılı / 0 hata' },
-  { level: 'ok', source: 'MEYES', message: 'Senkronizasyon: 1.2M sigortalı kaydı eşlendi' },
+  { level: 'info', source: 'KPS', message: 'KPS sorgulama: 12.438 başarılı / 0 hata' },
+  { level: 'ok', source: 'MEYES', message: 'Senkronizasyon: 1.2 mn sigortalı kaydı eşlendi' },
   { level: 'info', source: 'AKT', message: 'Aktüeryal model güncellendi (15:03 UTC)' },
-  { level: 'ok', source: 'OBT', message: 'Oto-bordro tahsilat doğruluğu %99.7' },
-  { level: 'warn', source: 'SAĞ', message: 'GSS 60/c-1 kapsamı YoY -%4.4' },
-  { level: 'info', source: 'NET', message: 'API gateway 2,148 req/s — sağlıklı' },
+  { level: 'ok', source: 'OBT', message: 'Oto-bordro tahsilat doğruluğu yüksek' },
+  { level: 'warn', source: 'SAĞ', message: 'GSS 60/c-1 kapsamı azalma eğiliminde' },
+  { level: 'info', source: 'NET', message: 'API gateway 2.148 req/s — sağlıklı' },
 ];
 
 function initialSeries(): StreamPoint[] {

@@ -29,17 +29,18 @@ export default {
           dim: 'rgb(var(--ink-dim) / <alpha-value>)',
         },
         // Brand & signal — her iki temada sabit (vurgu rengi)
+        // SGK kurumsal mavi skalası
         brand: {
-          50: '#eef4ff',
-          100: '#d9e6ff',
-          200: '#bcd2ff',
-          300: '#8fb4ff',
-          400: '#5b8bff',
-          500: '#3b6bf5',
-          600: '#2851e6',
-          700: '#213fc9',
-          800: '#1f37a0',
-          900: '#1f3380',
+          50: '#e6f1fa',
+          100: '#bfd9f0',
+          200: '#94bee2',
+          300: '#5b9dcf',
+          400: '#2b7ebd',
+          500: '#0066B3',
+          600: '#00529F',
+          700: '#003f7a',
+          800: '#002b55',
+          900: '#001a31',
         },
         signal: {
           ok: 'rgb(var(--signal-ok) / <alpha-value>)',

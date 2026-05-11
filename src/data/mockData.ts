@@ -12,6 +12,7 @@ import type {
   KronikKalem,
   ProvizyonSeri,
   SaglikDagilim,
+  SayiPaneliData,
   YapilandirmaSerisi,
   YeniEmekliSerisi,
   YerliIthal,
@@ -153,9 +154,77 @@ export const eczaneOzet: EczaneKalem[] = [
   { ad: 'Eczane Sayısı', deger: 27_600, trend: 0.8 },
 ];
 
+/** Yerli/İthal ilaç — mutlak rakam (yüzde değil) */
 export const yerliIthal: YerliIthal[] = [
-  { ad: 'Adet', yerli: 81, ithal: 19 },
-  { ad: 'Maliyet', yerli: 47, ithal: 53 },
+  { ad: 'Adet · aylık', yerli: 26.2, ithal: 6.2, birim: 'mn reçete' },
+  { ad: 'Maliyet · aylık', yerli: 9.3, ithal: 10.5, birim: 'mlr ₺' },
+];
+
+/**
+ * 6 ana ölçüm — günlük/haftalık/yıllık net rakamlar (yüzdesiz).
+ * Sağlık reçete, hastane reçete, emekli sayısı, aktif sigortalı, aktif icra dosya, bütçe performansı.
+ */
+export const sayiPanelleri: SayiPaneliData[] = [
+  {
+    id: 'saglik-recete',
+    baslik: 'Sağlık · Reçete',
+    altBaslik: 'sgk provizyon kapsamı',
+    gunluk: 1_080_000,
+    haftalik: 7_480_000,
+    yillik: 388_800_000,
+    format: 'compact',
+    durum: 'info',
+  },
+  {
+    id: 'hastane-recete',
+    baslik: 'Hastane · Reçete',
+    altBaslik: 'hastane içi yazılan',
+    gunluk: 378_000,
+    haftalik: 2_618_000,
+    yillik: 136_080_000,
+    format: 'compact',
+    durum: 'info',
+  },
+  {
+    id: 'emekli-sayisi',
+    baslik: 'Emekli · Yeni Bağlanan',
+    altBaslik: 'aylık ort 135.900',
+    gunluk: 4_530,
+    haftalik: 31_700,
+    yillik: 1_580_000,
+    format: 'compact',
+    durum: 'warn',
+  },
+  {
+    id: 'aktif-sigortali',
+    baslik: 'Aktif Sigortalı · Net Giriş',
+    altBaslik: 'toplam 24.1 mn',
+    gunluk: 2_350,
+    haftalik: 16_460,
+    yillik: 856_000,
+    format: 'compact',
+    durum: 'ok',
+  },
+  {
+    id: 'icra-dosya',
+    baslik: 'Aktif İcra Dosya',
+    altBaslik: 'yeni açılan · tahsilat takibi',
+    gunluk: 8_630,
+    haftalik: 60_400,
+    yillik: 3_148_000,
+    format: 'compact',
+    durum: 'warn',
+  },
+  {
+    id: 'butce-perf',
+    baslik: 'Bütçe Performansı',
+    altBaslik: 'prim tahakkuk',
+    gunluk: 6_220_000_000,
+    haftalik: 43_650_000_000,
+    yillik: 2_270_000_000_000,
+    format: 'tl',
+    durum: 'ok',
+  },
 ];
 
 /** İl bazlı denetim / harcama yoğunluğu (ısı haritası) — 81 il */
@@ -265,7 +334,7 @@ export const denetimOzet = {
   geriAlinan: 1_180_000_000, // ₺
 };
 
-/** Üst uyarı barı için kritik sapmalar — finansal taraf fazlaya geçti, operasyonel dikkat kalemleri kaldı */
+/** Üst uyarı barı için kritik sapmalar — yüzdesiz, mutlak rakamlı */
 export const aktifUyarilar: AlertItem[] = [
   {
     id: 'al-1',
@@ -278,24 +347,24 @@ export const aktifUyarilar: AlertItem[] = [
   {
     id: 'al-2',
     level: 'warn',
-    title: 'Onkoloji harcama artışı sürüyor',
-    detail: 'YoY +%8,3 — toplam pay %21,6',
+    title: 'Onkoloji harcama artış eğiliminde',
+    detail: 'Aylık 18.4 mlr ₺ — toplam içinde lider kalem',
     sapma: 8.3,
     bolum: 'Sağlık',
   },
   {
     id: 'al-3',
     level: 'warn',
-    title: 'Reçete başı maliyet yıllık +%18,7',
-    detail: 'Ortalama 624,80 ₺ — ilaç enflasyonu eşiği aşıldı',
+    title: 'Reçete başı maliyet yükseliyor',
+    detail: 'Ortalama 624,80 ₺ — ilaç enflasyonu izleniyor',
     sapma: 18.7,
     bolum: 'Eczane',
   },
   {
     id: 'al-4',
     level: 'warn',
-    title: 'Şanlıurfa kayıt dışı istihdam %33,4',
-    detail: 'Saha denetim önceliği',
+    title: 'Şanlıurfa kayıt dışı istihdam yoğun',
+    detail: 'Saha denetim önceliği — tahmini 1,2 mn çalışan',
     sapma: 13.4,
     bolum: 'Denetim',
   },

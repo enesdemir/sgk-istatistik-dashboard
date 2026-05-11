@@ -3,104 +3,55 @@
 @tailwind utilities;
 
 @layer base {
-  /* LIGHT (default) -----------------------------------------------------
-   * Mantık: body slate-100 (gri-mavi tabandan), paneller (sidebar / header /
-   * card) saf beyaz. Saf beyazlık ancak body bg'den ayrışınca görünür.
-   * --------------------------------------------------------------------- */
+  /* SGK · Light teması — SGK kurumsal mavi-beyaz paleti
+     Body soft white, panellar saf beyaz, vurgular SGK mavi. */
   :root {
     color-scheme: light;
 
-    --bg: 236 241 248;          /* body — slate-100 gri-mavi taban */
+    --bg: 240 246 252;          /* body — pale SGK blue-tinted white */
     --bg-subtle: 255 255 255;   /* sidebar + header — saf beyaz panel */
-    --bg-surface: 255 255 255;  /* card — saf beyaz */
-    --bg-elevated: 226 233 243; /* iç sub-panel — beyaz kart içinde net görünür gri-mavi tint */
+    --bg-surface: 255 255 255;  /* kart — saf beyaz */
+    --bg-elevated: 226 237 248; /* iç sub-panel — SGK mavi tint */
 
-    --border: 15 23 42;         /* slate-900, rgba alpha ile yumuşatılır */
-    --border-strong: 15 23 42;
+    --border: 12 41 75;         /* deep SGK navy, rgba alpha ile yumuşatılır */
+    --border-strong: 12 41 75;
 
-    --ink: 15 23 42;            /* slate-900 — ana metin */
-    --ink-muted: 71 85 105;     /* slate-600 — yardımcı */
-    --ink-dim: 148 163 184;     /* slate-400 — pasif */
+    --ink: 12 41 75;            /* deep SGK navy — ana metin */
+    --ink-muted: 71 95 130;     /* medium slate-blue */
+    --ink-dim: 148 170 195;     /* light slate-blue */
 
-    --signal-ok: 5 150 105;
-    --signal-warn: 217 119 6;
-    --signal-bad: 220 38 38;
-    --signal-info: 8 145 178;
+    --signal-ok: 5 122 85;
+    --signal-warn: 191 99 7;
+    --signal-bad: 192 28 28;
+    --signal-info: 0 102 179;   /* SGK mavi */
 
-    /* Kartların body'den ayrılması için light'ta belirgin alt gölge */
     --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.95) inset,
-      0 1px 2px rgba(15, 23, 42, 0.06),
-      0 14px 36px -14px rgba(15, 23, 42, 0.20);
+      0 1px 2px rgba(12, 41, 75, 0.06),
+      0 14px 36px -14px rgba(12, 41, 75, 0.20);
     --shadow-card-hover: 0 1px 0 rgba(255, 255, 255, 0.95) inset,
-      0 2px 4px rgba(15, 23, 42, 0.08),
-      0 22px 48px -16px rgba(15, 23, 42, 0.28);
-    --shadow-glow: 0 0 0 1px rgba(59, 107, 245, 0.22),
-      0 8px 28px -10px rgba(59, 107, 245, 0.32);
+      0 2px 4px rgba(12, 41, 75, 0.08),
+      0 22px 48px -16px rgba(12, 41, 75, 0.28);
+    --shadow-glow: 0 0 0 1px rgba(0, 102, 179, 0.22),
+      0 8px 28px -10px rgba(0, 102, 179, 0.32);
 
-    /* Radial mavi blob'lar — light'ta neredeyse görünmez */
-    --bg-blob-1: rgba(59, 107, 245, 0.04);
-    --bg-blob-2: rgba(6, 182, 212, 0.03);
+    /* Body blob — sadece SGK mavi */
+    --bg-blob-1: rgba(0, 102, 179, 0.07);
+    --bg-blob-2: rgba(0, 102, 179, 0.04);
 
     /* Recharts */
-    --grid: rgba(15, 23, 42, 0.06);
+    --grid: rgba(12, 41, 75, 0.06);
     --axis-text: rgb(100 116 139);
     --tooltip-bg: rgba(255, 255, 255, 0.98);
-    --tooltip-border: rgba(15, 23, 42, 0.10);
+    --tooltip-border: rgba(12, 41, 75, 0.12);
 
-    /* Card üzerinde çok hafif beyaz sheen (zaten beyaz kart üzerinde no-op) */
     --sheen-1: rgba(255, 255, 255, 0.6);
     --sheen-2: transparent;
 
-    --gradient-text-from: #2851e6;
-    --gradient-text-to: #0891b2;
+    --gradient-text-from: #00529F;
+    --gradient-text-to: #0079D1;
 
     --map-stroke: rgba(255, 255, 255, 0.95);
-    --map-stroke-hover: rgba(15, 23, 42, 0.95);
-  }
-
-  /* DARK ---------------------------------------------------------------- */
-  :root.dark {
-    color-scheme: dark;
-
-    --bg: 10 14 26;
-    --bg-subtle: 15 20 36;
-    --bg-surface: 20 26 46;
-    --bg-elevated: 26 33 56;
-
-    --border: 148 163 184;
-    --border-strong: 148 163 184;
-
-    --ink: 231 236 243;
-    --ink-muted: 148 163 184;
-    --ink-dim: 100 116 139;
-
-    --signal-ok: 16 185 129;
-    --signal-warn: 245 158 11;
-    --signal-bad: 239 68 68;
-    --signal-info: 6 182 212;
-
-    --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 1px 2px rgba(0, 0, 0, 0.25),
-      0 8px 24px -12px rgba(0, 0, 0, 0.45);
-    --shadow-card-hover: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 1px 2px rgba(0, 0, 0, 0.3),
-      0 16px 32px -10px rgba(0, 0, 0, 0.55);
-    --shadow-glow: 0 0 0 1px rgba(59, 107, 245, 0.35), 0 8px 32px -8px rgba(59, 107, 245, 0.55);
-
-    --bg-blob-1: rgba(59, 107, 245, 0.10);
-    --bg-blob-2: rgba(6, 182, 212, 0.08);
-
-    --grid: rgba(148, 163, 184, 0.06);
-    --axis-text: rgb(148 163 184);
-    --tooltip-bg: rgba(20, 26, 46, 0.95);
-    --tooltip-border: rgba(148, 163, 184, 0.18);
-
-    --sheen-1: rgba(255, 255, 255, 0.05);
-    --sheen-2: transparent;
-
-    --gradient-text-from: #93b4ff;
-    --gradient-text-to: #67e8f9;
-
-    --map-stroke: rgba(10, 14, 26, 0.85);
-    --map-stroke-hover: rgba(255, 255, 255, 0.95);
+    --map-stroke-hover: rgba(12, 41, 75, 0.95);
   }
 
   html,
@@ -112,11 +63,10 @@
   body {
     @apply bg-bg text-ink font-sans antialiased;
     background-image:
-      radial-gradient(circle at 18% 0%, var(--bg-blob-1) 0%, transparent 50%),
-      radial-gradient(circle at 90% 100%, var(--bg-blob-2) 0%, transparent 50%);
+      radial-gradient(ellipse 55% 45% at 15% 8%, var(--bg-blob-1) 0%, transparent 100%),
+      radial-gradient(ellipse 60% 50% at 85% 92%, var(--bg-blob-2) 0%, transparent 100%);
     background-attachment: fixed;
     font-feature-settings: 'cv11', 'ss01', 'ss03';
-    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   /* Scrollbar */
@@ -128,7 +78,7 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgb(var(--ink-muted) / 0.18);
+    background: rgb(var(--ink-muted) / 0.20);
     border-radius: 5px;
   }
   ::-webkit-scrollbar-thumb:hover {
@@ -136,7 +86,7 @@
   }
 
   ::selection {
-    background: rgba(59, 107, 245, 0.32);
+    background: rgba(0, 102, 179, 0.28);
     color: rgb(var(--ink));
   }
 }
@@ -144,10 +94,9 @@
 @layer components {
   .card {
     @apply relative overflow-hidden rounded-2xl border bg-bg-surface;
-    border-color: rgb(var(--border) / 0.08);
+    border-color: rgb(var(--border) / 0.10);
     box-shadow: var(--shadow-card);
     background-image: linear-gradient(180deg, var(--sheen-1), var(--sheen-2));
-    backdrop-filter: blur(6px);
   }
 
   .card-hover {
@@ -221,7 +170,8 @@
   }
 
   .grid-fade {
-    background-image: linear-gradient(rgb(var(--ink) / 0.06) 1px, transparent 1px),
+    background-image:
+      linear-gradient(rgb(var(--ink) / 0.06) 1px, transparent 1px),
       linear-gradient(90deg, rgb(var(--ink) / 0.06) 1px, transparent 1px);
     background-size: 28px 28px;
     mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
@@ -258,7 +208,7 @@
     -webkit-text-fill-color: transparent;
   }
 
-  /* Recharts integration tweaks */
+  /* Recharts */
   .recharts-default-tooltip {
     background: var(--tooltip-bg) !important;
     border: 1px solid var(--tooltip-border) !important;
@@ -272,16 +222,13 @@
   .recharts-tooltip-item {
     color: rgb(var(--ink)) !important;
   }
-
   .recharts-cartesian-grid line {
     stroke: var(--grid) !important;
   }
-
   .recharts-cartesian-axis-tick text {
     fill: var(--axis-text) !important;
     font-size: 11px !important;
   }
-
   .recharts-legend-item-text {
     color: rgb(var(--ink-muted)) !important;
     font-size: 12px !important;

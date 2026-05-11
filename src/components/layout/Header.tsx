@@ -1,6 +1,5 @@
 import { Bell, Calendar, Download, Menu, RefreshCw, Search } from 'lucide-react';
 import { ozet } from '@/data/mockData';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 interface HeaderProps {
   /** Mobil drawer'ı açan handler — sadece lg altında butonu gösterir */
@@ -58,7 +57,6 @@ export function Header({ onOpenMobileNav }: HeaderProps) {
             </span>
           </div>
 
-          <ThemeToggle />
           <button
             type="button"
             className="hidden h-9 w-9 items-center justify-center rounded-lg border border-border bg-bg-surface/80 text-ink-muted transition-colors hover:bg-bg-elevated hover:text-ink sm:flex"

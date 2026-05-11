@@ -81,6 +81,18 @@ export interface YerliIthal {
   ad: string;
   yerli: number;
   ithal: number;
+  birim: string;
+}
+
+export interface SayiPaneliData {
+  id: string;
+  baslik: string;
+  altBaslik?: string;
+  gunluk: number;
+  haftalik: number;
+  yillik: number;
+  format: 'compact' | 'tl';
+  durum: 'ok' | 'warn' | 'bad' | 'info';
 }
 
 export interface DenetimSerisi {

@@ -1,37 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-export type Theme = 'light' | 'dark';
-
-const STORAGE_KEY = 'sgk-theme';
-
-function getInitial(): Theme {
-  if (typeof window === 'undefined') return 'dark';
-  const saved = window.localStorage.getItem(STORAGE_KEY) as Theme | null;
-  if (saved === 'light' || saved === 'dark') return saved;
-  // Sistem tercihini takip et — varsayılan dark
-  const prefersLight = window.matchMedia?.('(prefers-color-scheme: light)').matches;
-  return prefersLight ? 'light' : 'dark';
-}
+export type Theme = 'light';
 
 /**
- * Tema yönetimi: `dark` sınıfı `<html>` üzerinde, tercih localStorage'da saklanır.
- * Sistem teması değişirse, kullanıcı manuel seçim yapmamışsa otomatik takip eder.
+ * Tema sistemi light moda kilitli — SGK kurumsal mavi-beyaz tek tema.
+ * Eski dark tercih localStorage'da varsa temizler, html'den `dark` class'ını siler.
  */
 export function useTheme(): [Theme, (t: Theme) => void, () => void] {
-  const [theme, setThemeState] = useState<Theme>(() => getInitial());
-
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.toggle('dark', theme === 'dark');
-    root.setAttribute('data-theme', theme);
-  }, [theme]);
+    root.classList.remove('dark');
+    root.setAttribute('data-theme', 'light');
+    try {
+      window.localStorage.removeItem('sgk-theme');
+    } catch {
+      // localStorage kapalı olabilir, sessizce geç
+    }
+  }, []);
 
-  const setTheme = (t: Theme) => {
-    window.localStorage.setItem(STORAGE_KEY, t);
-    setThemeState(t);
-  };
-
-  const toggle = () => setTheme(theme === 'dark' ? 'light' : 'dark');
-
-  return [theme, setTheme, toggle];
+  return ['light', () => {}, () => {}];
 }
