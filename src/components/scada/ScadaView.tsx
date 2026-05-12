@@ -454,19 +454,18 @@ export function ScadaView() {
   useTheme(); // light moda kilitler
   const s = useScadaData();
   return (
-    <>
+    <div className="flex h-full min-h-0 w-full flex-col">
       <ScadaHeader s={s} />
       <ScadaDashboard s={s} />
-    </>
+    </div>
   );
 }
 
 function ScadaDashboard({ s }: { s: ScadaState }) {
   return (
     <div
-      className="grid w-full gap-2 font-sans"
+      className="grid w-full min-h-0 flex-1 gap-2 font-sans"
       style={{
-        height: 'calc(100vh - 7rem)',
         gridTemplateColumns: 'repeat(12, minmax(0, 1fr))',
         gridTemplateRows: '1.45fr 0.75fr 1fr',
       }}
@@ -586,7 +585,7 @@ function ScadaHeader({ s }: { s: ScadaState }) {
   const aktifPasif = ozet.aktifSigortali / ozet.pasifSigortali;
 
   return (
-    <header className="mb-3 flex items-center justify-between gap-4 rounded-xl border border-border bg-bg-subtle px-4 py-3 shadow-card">
+    <header className="mb-2 flex shrink-0 items-center justify-between gap-4 rounded-xl border border-border bg-bg-subtle px-4 py-2 shadow-card">
       <div className="flex items-center gap-4 min-w-0">
         <div className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-glow">
           <Activity size={26} strokeWidth={2.4} />
