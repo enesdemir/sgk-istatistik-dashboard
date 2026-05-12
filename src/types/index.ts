@@ -89,10 +89,15 @@ export interface SayiPaneliData {
   baslik: string;
   altBaslik?: string;
   gunluk: number;
-  haftalik: number;
+  aylik: number;
   yillik: number;
   format: 'compact' | 'tl';
   durum: 'ok' | 'warn' | 'bad' | 'info';
+  /** Kümülatif toplam stok — emekli/sigortalı/icra için anlamlı */
+  toplam?: {
+    etiket: string;
+    deger: number;
+  };
 }
 
 export interface DenetimSerisi {

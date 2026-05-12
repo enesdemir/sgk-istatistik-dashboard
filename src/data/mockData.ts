@@ -161,16 +161,18 @@ export const yerliIthal: YerliIthal[] = [
 ];
 
 /**
- * 6 ana ölçüm — günlük/haftalık/yıllık net rakamlar (yüzdesiz).
- * Sağlık reçete, hastane reçete, emekli sayısı, aktif sigortalı, aktif icra dosya, bütçe performansı.
+ * 6 ana ölçüm — günlük/aylık/yıllık net rakamlar (yüzdesiz).
+ * Eczane reçete, Hastane reçete, Emekli yeni bağlanan, Aktif sigortalı net giriş,
+ * Aktif icra dosya, Bütçe performansı (prim tahakkuk).
+ * Emekli ve aktif sigortalı için kümülatif TOPLAM da var.
  */
 export const sayiPanelleri: SayiPaneliData[] = [
   {
-    id: 'saglik-recete',
-    baslik: 'Sağlık · Reçete',
-    altBaslik: 'sgk provizyon kapsamı',
+    id: 'eczane-recete',
+    baslik: 'Eczane · Reçete',
+    altBaslik: 'eczanede karşılanan',
     gunluk: 1_080_000,
-    haftalik: 7_480_000,
+    aylik: 32_400_000,
     yillik: 388_800_000,
     format: 'compact',
     durum: 'info',
@@ -180,7 +182,7 @@ export const sayiPanelleri: SayiPaneliData[] = [
     baslik: 'Hastane · Reçete',
     altBaslik: 'hastane içi yazılan',
     gunluk: 378_000,
-    haftalik: 2_618_000,
+    aylik: 11_340_000,
     yillik: 136_080_000,
     format: 'compact',
     durum: 'info',
@@ -188,29 +190,37 @@ export const sayiPanelleri: SayiPaneliData[] = [
   {
     id: 'emekli-sayisi',
     baslik: 'Emekli · Yeni Bağlanan',
-    altBaslik: 'aylık ort 135.900',
+    altBaslik: 'aylık yeni bağlanan',
     gunluk: 4_530,
-    haftalik: 31_700,
+    aylik: 135_900,
     yillik: 1_580_000,
     format: 'compact',
     durum: 'warn',
+    toplam: {
+      etiket: 'Toplam Pasif Sigortalı',
+      deger: 11_072_663,
+    },
   },
   {
     id: 'aktif-sigortali',
     baslik: 'Aktif Sigortalı · Net Giriş',
-    altBaslik: 'toplam 24.1 mn',
+    altBaslik: 'sisteme katılım',
     gunluk: 2_350,
-    haftalik: 16_460,
+    aylik: 70_500,
     yillik: 856_000,
     format: 'compact',
     durum: 'ok',
+    toplam: {
+      etiket: 'Toplam Aktif Sigortalı',
+      deger: 24_138_402,
+    },
   },
   {
     id: 'icra-dosya',
     baslik: 'Aktif İcra Dosya',
     altBaslik: 'yeni açılan · tahsilat takibi',
     gunluk: 8_630,
-    haftalik: 60_400,
+    aylik: 258_900,
     yillik: 3_148_000,
     format: 'compact',
     durum: 'warn',
@@ -220,7 +230,7 @@ export const sayiPanelleri: SayiPaneliData[] = [
     baslik: 'Bütçe Performansı',
     altBaslik: 'prim tahakkuk',
     gunluk: 6_220_000_000,
-    haftalik: 43_650_000_000,
+    aylik: 189_200_000_000,
     yillik: 2_270_000_000_000,
     format: 'tl',
     durum: 'ok',

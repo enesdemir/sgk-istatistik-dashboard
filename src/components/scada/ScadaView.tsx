@@ -100,9 +100,9 @@ function Panel({
   );
 }
 
-/** ───── SayiPaneli — Günlük / Haftalık / Yıllık net rakamlar ───── */
+/** ───── SayiPaneli — Günlük / Aylık / Yıllık net rakamlar + opsiyonel TOPLAM ───── */
 const ICON_BY_ID: Record<string, typeof CircleDollarSign> = {
-  'saglik-recete': Pill,
+  'eczane-recete': Pill,
   'hastane-recete': Hospital,
   'emekli-sayisi': UserCheck,
   'aktif-sigortali': Users,
@@ -125,24 +125,36 @@ function SayiPaneli({ data }: { data: SayiPaneliData }) {
         <ArrowUpRight size={16} strokeWidth={2.4} className="text-signal-ok" />
       }
     >
-      <div className="grid h-full grid-cols-3 gap-2 p-2">
-        {[
-          { l: 'GÜNLÜK', v: data.gunluk },
-          { l: 'HAFTALIK', v: data.haftalik },
-          { l: 'YILLIK', v: data.yillik },
-        ].map((c) => (
-          <div
-            key={c.l}
-            className="flex flex-col justify-between rounded-lg border border-border bg-bg-elevated px-3 py-2.5"
-          >
-            <div className="text-xs font-bold uppercase tracking-wider text-ink-dim">
-              {c.l}
+      <div className="flex h-full min-h-0 flex-col gap-2 p-2">
+        <div className="grid min-h-0 flex-1 grid-cols-3 gap-2">
+          {[
+            { l: 'GÜNLÜK', v: data.gunluk },
+            { l: 'AYLIK', v: data.aylik },
+            { l: 'YILLIK', v: data.yillik },
+          ].map((c) => (
+            <div
+              key={c.l}
+              className="flex flex-col justify-between rounded-lg border border-border bg-bg-elevated px-3 py-2.5"
+            >
+              <div className="text-xs font-bold uppercase tracking-wider text-ink-dim">
+                {c.l}
+              </div>
+              <div className="mt-2 font-display text-3xl font-black leading-none tracking-tight tabular-nums text-ink">
+                {fmt(c.v)}
+              </div>
             </div>
-            <div className="mt-2 font-display text-3xl font-black leading-none tracking-tight tabular-nums text-ink">
-              {fmt(c.v)}
-            </div>
+          ))}
+        </div>
+        {data.toplam && (
+          <div className="flex shrink-0 items-center justify-between gap-2 rounded-lg border border-brand-500/30 bg-brand-500/[0.06] px-3 py-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-700">
+              {data.toplam.etiket}
+            </span>
+            <span className="font-display text-2xl font-black tabular-nums text-brand-600">
+              {fmtCompact(data.toplam.deger)}
+            </span>
           </div>
-        ))}
+        )}
       </div>
     </Panel>
   );
