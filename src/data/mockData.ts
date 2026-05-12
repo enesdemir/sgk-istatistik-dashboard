@@ -174,7 +174,7 @@ export const sayiPanelleri: SayiPaneliData[] = [
     gunluk: 1_080_000,
     aylik: 32_400_000,
     yillik: 388_800_000,
-    format: 'compact',
+    format: 'full',
     durum: 'info',
   },
   {
@@ -184,7 +184,7 @@ export const sayiPanelleri: SayiPaneliData[] = [
     gunluk: 378_000,
     aylik: 11_340_000,
     yillik: 136_080_000,
-    format: 'compact',
+    format: 'full',
     durum: 'info',
   },
   {

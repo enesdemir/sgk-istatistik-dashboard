@@ -91,7 +91,7 @@ export interface SayiPaneliData {
   gunluk: number;
   aylik: number;
   yillik: number;
-  format: 'compact' | 'tl';
+  format: 'compact' | 'tl' | 'full';
   durum: 'ok' | 'warn' | 'bad' | 'info';
   /** Kümülatif toplam stok — emekli/sigortalı/icra için anlamlı */
   toplam?: {

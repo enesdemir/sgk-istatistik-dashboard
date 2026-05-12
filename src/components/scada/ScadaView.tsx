@@ -43,7 +43,7 @@ import {
 import { useScadaData, type AlarmEvent, type ScadaState, type StreamPoint } from '@/hooks/useScadaData';
 import { useTheme } from '@/hooks/useTheme';
 import { cn } from '@/lib/cn';
-import { fmtCompact, fmtNum, fmtTLCompact } from '@/lib/format';
+import { fmtCompact, fmtCompactParts, fmtNum } from '@/lib/format';
 import type { SayiPaneliData } from '@/types';
 
 type SignalLevel = 'ok' | 'warn' | 'bad' | 'info';
@@ -116,8 +116,38 @@ const ICON_BY_ID: Record<string, typeof CircleDollarSign> = {
 
 function SayiPaneli({ data }: { data: SayiPaneliData }) {
   const Icon = ICON_BY_ID[data.id] ?? FileText;
-  const fmt = (n: number) =>
-    data.format === 'tl' ? fmtTLCompact(n) : fmtCompact(n);
+
+  /** Hücre içeriğini formata göre render et */
+  const renderCellValue = (n: number) => {
+    if (data.format === 'tl') {
+      // Sayı üst satır, birim alt satır
+      const { value, unit } = fmtCompactParts(n);
+      return (
+        <>
+          <div className="mt-auto font-display text-3xl font-black leading-none tracking-tight tabular-nums text-ink">
+            {value}
+          </div>
+          <div className="mt-1 font-mono text-sm font-semibold uppercase tracking-wider text-ink-muted">
+            {unit ? `${unit} ₺` : '₺'}
+          </div>
+        </>
+      );
+    }
+    if (data.format === 'full') {
+      // Tam integer, daha küçük font (uzun rakamlar için)
+      return (
+        <div className="mt-auto font-display text-xl font-black leading-none tracking-tight tabular-nums text-ink">
+          {fmtNum(n)}
+        </div>
+      );
+    }
+    // compact (varsayılan)
+    return (
+      <div className="mt-auto font-display text-3xl font-black leading-none tracking-tight tabular-nums text-ink">
+        {fmtCompact(n)}
+      </div>
+    );
+  };
 
   return (
     <Panel
@@ -138,14 +168,15 @@ function SayiPaneli({ data }: { data: SayiPaneliData }) {
           ].map((c) => (
             <div
               key={c.l}
-              className="flex flex-col justify-between rounded-lg border border-border bg-bg-elevated px-3 py-2.5"
+              className={cn(
+                'flex flex-col rounded-lg border border-border bg-bg-elevated py-2.5',
+                data.format === 'full' ? 'px-2' : 'px-3',
+              )}
             >
               <div className="text-xs font-bold uppercase tracking-wider text-ink-dim">
                 {c.l}
               </div>
-              <div className="mt-2 font-display text-3xl font-black leading-none tracking-tight tabular-nums text-ink">
-                {fmt(c.v)}
-              </div>
+              {renderCellValue(c.v)}
             </div>
           ))}
         </div>

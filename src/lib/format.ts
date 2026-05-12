@@ -27,3 +27,38 @@ export const fmtSigned = (n: number, suffix = '') =>
   `${n > 0 ? '+' : ''}${trNumber.format(n)}${suffix}`;
 
 export const fmtSignedPct = (n: number) => `${n > 0 ? '+' : ''}${n.toFixed(1)}%`;
+
+/**
+ * Compact rakamı (sayı, birim) parçaları olarak döner — split layout için.
+ * Örn: 6_220_000_000 → { value: "6,22", unit: "Mr" }
+ *      388_800_000 → { value: "389", unit: "Mn" }
+ */
+export function fmtCompactParts(n: number): { value: string; unit: string } {
+  const abs = Math.abs(n);
+  let value: number;
+  let unit: string;
+  if (abs >= 1e12) {
+    value = n / 1e12;
+    unit = 'Tn';
+  } else if (abs >= 1e9) {
+    value = n / 1e9;
+    unit = 'Mr';
+  } else if (abs >= 1e6) {
+    value = n / 1e6;
+    unit = 'Mn';
+  } else if (abs >= 1e3) {
+    value = n / 1e3;
+    unit = 'B';
+  } else {
+    value = n;
+    unit = '';
+  }
+  const decimals = Math.abs(value) >= 100 ? 0 : Math.abs(value) >= 10 ? 1 : 2;
+  return {
+    value: value.toLocaleString('tr-TR', {
+      maximumFractionDigits: decimals,
+      minimumFractionDigits: 0,
+    }),
+    unit,
+  };
+}
