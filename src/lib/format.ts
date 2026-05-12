@@ -1,5 +1,6 @@
 const trNumber = new Intl.NumberFormat('tr-TR');
 const trCompact = new Intl.NumberFormat('tr-TR', { notation: 'compact', maximumFractionDigits: 2 });
+const trCompactInt = new Intl.NumberFormat('tr-TR', { notation: 'compact', maximumFractionDigits: 0 });
 const trCurrency = new Intl.NumberFormat('tr-TR', {
   style: 'currency',
   currency: 'TRY',
@@ -19,6 +20,7 @@ const trPercent = new Intl.NumberFormat('tr-TR', {
 
 export const fmtNum = (n: number) => trNumber.format(n);
 export const fmtCompact = (n: number) => trCompact.format(n);
+export const fmtCompactInt = (n: number) => trCompactInt.format(n);
 export const fmtTL = (n: number) => trCurrency.format(n);
 export const fmtTLCompact = (n: number) => trCurrencyCompact.format(n);
 export const fmtPct = (n: number) => trPercent.format(n / 100);

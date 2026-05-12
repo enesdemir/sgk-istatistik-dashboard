@@ -43,7 +43,7 @@ import {
 import { useScadaData, type AlarmEvent, type ScadaState, type StreamPoint } from '@/hooks/useScadaData';
 import { useTheme } from '@/hooks/useTheme';
 import { cn } from '@/lib/cn';
-import { fmtCompact, fmtCompactParts, fmtNum } from '@/lib/format';
+import { fmtCompact, fmtCompactInt, fmtCompactParts } from '@/lib/format';
 import type { SayiPaneliData } from '@/types';
 
 type SignalLevel = 'ok' | 'warn' | 'bad' | 'info';
@@ -134,10 +134,10 @@ function SayiPaneli({ data }: { data: SayiPaneliData }) {
       );
     }
     if (data.format === 'full') {
-      // Tam integer, daha küçük font (uzun rakamlar için)
+      // Compact ama decimal'sız: "136,08 Mn" yerine "136 Mn"
       return (
-        <div className="mt-auto font-display text-xl font-black leading-none tracking-tight tabular-nums text-ink">
-          {fmtNum(n)}
+        <div className="mt-auto font-display text-3xl font-black leading-none tracking-tight tabular-nums text-ink">
+          {fmtCompactInt(n)}
         </div>
       );
     }
@@ -168,10 +168,7 @@ function SayiPaneli({ data }: { data: SayiPaneliData }) {
           ].map((c) => (
             <div
               key={c.l}
-              className={cn(
-                'flex flex-col rounded-lg border border-border bg-bg-elevated py-2.5',
-                data.format === 'full' ? 'px-2' : 'px-3',
-              )}
+              className="flex flex-col rounded-lg border border-border bg-bg-elevated px-3 py-2.5"
             >
               <div className="text-xs font-bold uppercase tracking-wider text-ink-dim">
                 {c.l}
