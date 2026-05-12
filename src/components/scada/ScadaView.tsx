@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
 import {
   Activity,
+  AlertOctagon,
   ArrowUpRight,
   Banknote,
   Building2,
   CircleDollarSign,
+  ClipboardCheck,
   FileText,
   Gavel,
   HeartPulse,
@@ -104,9 +106,11 @@ function Panel({
 const ICON_BY_ID: Record<string, typeof CircleDollarSign> = {
   'eczane-recete': Pill,
   'hastane-recete': Hospital,
-  'emekli-sayisi': UserCheck,
+  emekli: UserCheck,
   'aktif-sigortali': Users,
   'icra-dosya': Gavel,
+  'denetlenen-isyeri': ClipboardCheck,
+  'uygulanan-ceza': AlertOctagon,
   'butce-perf': Banknote,
 };
 
@@ -467,11 +471,12 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
         gridTemplateRows: '1.5fr 1fr',
       }}
     >
-      {/* ═══ ÜST: SOL 3 SayiPaneli · HARİTA · SAĞ 3 SayiPaneli ═══ */}
-      <div className="col-span-3 grid min-h-0 grid-rows-3 gap-2">
+      {/* ═══ ÜST: SOL 4 SayiPaneli · HARİTA · SAĞ 4 SayiPaneli ═══ */}
+      <div className="col-span-3 grid min-h-0 grid-rows-4 gap-2">
         <SayiPaneli data={sayiPanelleri[0]} />
         <SayiPaneli data={sayiPanelleri[1]} />
         <SayiPaneli data={sayiPanelleri[2]} />
+        <SayiPaneli data={sayiPanelleri[3]} />
       </div>
 
       <div className="col-span-6 min-h-0">
@@ -493,10 +498,11 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
         </Panel>
       </div>
 
-      <div className="col-span-3 grid min-h-0 grid-rows-3 gap-2">
-        <SayiPaneli data={sayiPanelleri[3]} />
+      <div className="col-span-3 grid min-h-0 grid-rows-4 gap-2">
         <SayiPaneli data={sayiPanelleri[4]} />
         <SayiPaneli data={sayiPanelleri[5]} />
+        <SayiPaneli data={sayiPanelleri[6]} />
+        <SayiPaneli data={sayiPanelleri[7]} />
       </div>
 
       {/* ═══ ALT: 6 analiz paneli ═══ */}
