@@ -503,12 +503,12 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
         <SayiPaneli data={sayiPanelleri[5]} />
       </div>
 
-      {/* ═══ ROW 2: 4 SayiPaneli aynı satırda — Emekli / Aktif Sigortalı / Uygulanan Ceza / Bütçe ═══ */}
+      {/* ═══ ROW 2: 4 SayiPaneli aynı satırda — Emekli / Bütçe / Uygulanan Ceza / Aktif Sigortalı ═══ */}
       <div className="col-span-12 grid min-h-0 grid-cols-4 gap-2">
         <SayiPaneli data={sayiPanelleri[2]} />
-        <SayiPaneli data={sayiPanelleri[3]} />
-        <SayiPaneli data={sayiPanelleri[6]} />
         <SayiPaneli data={sayiPanelleri[7]} />
+        <SayiPaneli data={sayiPanelleri[6]} />
+        <SayiPaneli data={sayiPanelleri[3]} />
       </div>
 
       {/* ═══ ALT: 6 analiz paneli ═══ */}
