@@ -79,20 +79,20 @@ function Panel({
       )}
     >
       {baslik && (
-        <header className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-2.5 py-1.5">
+        <header className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-3 py-2">
           <div className="min-w-0">
-            <div className="flex items-center gap-1.5">
-              <TrafficLight level={durum} size="sm" pulse={durum !== 'ok'} />
-              {Icon && <Icon size={11} className="text-ink-muted" strokeWidth={2.2} />}
-              <span className="truncate text-[11px] font-semibold uppercase tracking-wider text-ink">
+            <div className="flex items-center gap-2">
+              <TrafficLight level={durum} size="md" pulse={durum !== 'ok'} />
+              {Icon && <Icon size={16} className="text-ink-muted" strokeWidth={2.2} />}
+              <span className="truncate text-base font-semibold uppercase tracking-wider text-ink">
                 {baslik}
               </span>
             </div>
             {altBaslik && (
-              <div className="truncate pl-[16px] text-[9px] text-ink-dim">{altBaslik}</div>
+              <div className="mt-0.5 truncate pl-[26px] text-xs text-ink-dim">{altBaslik}</div>
             )}
           </div>
-          {actions && <div className="flex shrink-0 items-center gap-1">{actions}</div>}
+          {actions && <div className="flex shrink-0 items-center gap-1.5">{actions}</div>}
         </header>
       )}
       <div className="relative flex min-h-0 flex-1 flex-col">{children}</div>
@@ -122,10 +122,10 @@ function SayiPaneli({ data }: { data: SayiPaneliData }) {
       durum={data.durum}
       icon={Icon}
       actions={
-        <ArrowUpRight size={12} strokeWidth={2.4} className="text-signal-ok" />
+        <ArrowUpRight size={16} strokeWidth={2.4} className="text-signal-ok" />
       }
     >
-      <div className="grid h-full grid-cols-3 gap-1.5 p-1.5">
+      <div className="grid h-full grid-cols-3 gap-2 p-2">
         {[
           { l: 'GÜNLÜK', v: data.gunluk },
           { l: 'HAFTALIK', v: data.haftalik },
@@ -133,12 +133,12 @@ function SayiPaneli({ data }: { data: SayiPaneliData }) {
         ].map((c) => (
           <div
             key={c.l}
-            className="flex flex-col justify-between rounded-md border border-border bg-bg-elevated px-1.5 py-1.5"
+            className="flex flex-col justify-between rounded-lg border border-border bg-bg-elevated px-3 py-2.5"
           >
-            <div className="text-[8px] font-bold uppercase tracking-wider text-ink-dim">
+            <div className="text-xs font-bold uppercase tracking-wider text-ink-dim">
               {c.l}
             </div>
-            <div className="mt-1 font-display text-base font-black leading-none tracking-tight tabular-nums text-ink">
+            <div className="mt-2 font-display text-3xl font-black leading-none tracking-tight tabular-nums text-ink">
               {fmt(c.v)}
             </div>
           </div>
@@ -172,36 +172,36 @@ function SaglikDagilimPanel() {
   }, []);
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-1.5 px-2 py-1.5">
-      <div className="grid shrink-0 grid-cols-3 gap-1">
+    <div className="flex h-full min-h-0 flex-col gap-2 px-2.5 py-2">
+      <div className="grid shrink-0 grid-cols-3 gap-1.5">
         {(['Hastane', 'Eczane', 'Sağlık'] as const).map((g) => (
-          <div key={g} className="rounded-md border border-border bg-bg-elevated px-1.5 py-1">
-            <div className="flex items-center gap-1 text-[8px] font-semibold uppercase tracking-wider text-ink-dim">
+          <div key={g} className="rounded-md border border-border bg-bg-elevated px-2 py-1.5">
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-ink-dim">
               <span
-                className="h-1.5 w-1.5 rounded-full"
+                className="h-2 w-2 rounded-full"
                 style={{ background: SAGLIK_GRUP_RENK[g] }}
               />
               {g}
             </div>
-            <div className="mt-0.5 flex items-baseline gap-1">
-              <span className="font-display text-sm font-bold tabular-nums text-ink">
+            <div className="mt-1 flex items-baseline gap-1">
+              <span className="font-display text-2xl font-black tabular-nums text-ink">
                 {gruplar[g].toFixed(1)}
               </span>
-              <span className="text-[8px] font-mono text-ink-dim">mlr ₺</span>
+              <span className="text-[10px] font-mono text-ink-dim">mlr ₺</span>
             </div>
           </div>
         ))}
       </div>
-      <ul className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-hidden">
+      <ul className="flex min-h-0 flex-1 flex-col gap-1 overflow-hidden">
         {saglikDagilim.map((d) => (
           <li
             key={d.kurum}
-            className="grid grid-cols-[auto_1fr_auto] items-center gap-1.5 text-[9px]"
+            className="grid grid-cols-[auto_1fr_auto] items-center gap-2 text-sm"
           >
-            <span className="h-1.5 w-1.5 shrink-0 rounded-sm" style={{ background: d.renk }} />
+            <span className="h-2 w-2 shrink-0 rounded-sm" style={{ background: d.renk }} />
             <div className="min-w-0">
               <div className="truncate text-ink">{d.kurum}</div>
-              <div className="mt-0.5 h-1 overflow-hidden rounded-full bg-bg-elevated">
+              <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-bg-elevated">
                 <div
                   className="h-full rounded-full"
                   style={{
@@ -212,9 +212,9 @@ function SaglikDagilimPanel() {
                 />
               </div>
             </div>
-            <span className="shrink-0 font-mono text-[10px] font-semibold tabular-nums text-ink">
+            <span className="shrink-0 font-mono text-base font-semibold tabular-nums text-ink">
               {d.tutar.toFixed(1)}
-              <span className="ml-0.5 text-[8px] font-normal text-ink-dim">mlr</span>
+              <span className="ml-0.5 text-[10px] font-normal text-ink-dim">mlr</span>
             </span>
           </li>
         ))}
@@ -227,21 +227,21 @@ function SaglikDagilimPanel() {
 function KronikList() {
   const max = useMemo(() => Math.max(...kronikKalemler.map((k) => k.tutar)), []);
   return (
-    <ul className="flex h-full min-h-0 flex-col gap-1 px-2 py-1.5 text-[10px]">
+    <ul className="flex h-full min-h-0 flex-col gap-1.5 px-2.5 py-2 text-sm">
       {kronikKalemler.map((k) => (
-        <li key={k.ad} className="grid grid-cols-[1fr_auto] items-center gap-2">
+        <li key={k.ad} className="grid grid-cols-[1fr_auto] items-center gap-2.5">
           <div className="min-w-0">
             <div className="truncate text-ink">{k.ad}</div>
-            <div className="mt-0.5 h-1 overflow-hidden rounded-full bg-bg-elevated">
+            <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-bg-elevated">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-300"
                 style={{ width: `${(k.tutar / max) * 100}%`, opacity: 0.85 }}
               />
             </div>
           </div>
-          <span className="font-mono text-[11px] font-semibold tabular-nums text-ink">
+          <span className="font-mono text-lg font-bold tabular-nums text-ink">
             {k.tutar.toFixed(1)}
-            <span className="ml-0.5 text-[8px] font-normal text-ink-dim">mlr ₺</span>
+            <span className="ml-0.5 text-[10px] font-normal text-ink-dim">mlr ₺</span>
           </span>
         </li>
       ))}
@@ -252,17 +252,19 @@ function KronikList() {
 /** ───── Yerli/İthal İlaç — mutlak rakam (yüzde değil) ───── */
 function YerliIthalMini() {
   return (
-    <div className="flex h-full flex-col gap-2.5 px-2.5 py-2">
+    <div className="flex h-full flex-col gap-3 px-3 py-2.5">
       {yerliIthal.map((row) => {
         const total = row.yerli + row.ithal;
         const yerliWidth = (row.yerli / total) * 100;
         return (
-          <div key={row.ad} className="text-[10px]">
-            <div className="mb-1 flex items-center justify-between">
-              <span className="font-mono uppercase tracking-wider text-ink-dim">{row.ad}</span>
-              <span className="text-[9px] font-mono text-ink-dim">{row.birim}</span>
+          <div key={row.ad} className="text-sm">
+            <div className="mb-1.5 flex items-center justify-between">
+              <span className="font-mono text-xs uppercase tracking-wider text-ink-dim">
+                {row.ad}
+              </span>
+              <span className="text-[11px] font-mono text-ink-dim">{row.birim}</span>
             </div>
-            <div className="flex h-3.5 overflow-hidden rounded-md ring-1 ring-inset ring-border">
+            <div className="flex h-4 overflow-hidden rounded-md ring-1 ring-inset ring-border">
               <div
                 className="bg-gradient-to-r from-brand-500 to-brand-400"
                 style={{ width: `${yerliWidth}%` }}
@@ -272,11 +274,11 @@ function YerliIthalMini() {
                 style={{ width: `${100 - yerliWidth}%` }}
               />
             </div>
-            <div className="mt-1 flex items-center justify-between text-[10px]">
-              <span className="font-mono font-semibold tabular-nums text-brand-600">
+            <div className="mt-1.5 flex items-center justify-between text-base">
+              <span className="font-mono font-bold tabular-nums text-brand-600">
                 Yerli {row.yerli.toFixed(1)}
               </span>
-              <span className="font-mono font-semibold tabular-nums text-signal-warn">
+              <span className="font-mono font-bold tabular-nums text-signal-warn">
                 İthal {row.ithal.toFixed(1)}
               </span>
             </div>
@@ -291,23 +293,23 @@ function YerliIthalMini() {
 function DenetimMini() {
   const sonAy = denetimSeri[denetimSeri.length - 1];
   return (
-    <div className="flex h-full flex-col gap-1.5 px-2 py-1.5">
-      <div className="grid grid-cols-2 gap-1.5">
-        <div className="rounded-md border border-border bg-bg-elevated px-2 py-1">
-          <div className="text-[8px] font-semibold uppercase tracking-wider text-ink-dim">
-            İptal Gün (ay)
+    <div className="flex h-full flex-col gap-2 px-2.5 py-2">
+      <div className="grid grid-cols-2 gap-2">
+        <div className="rounded-lg border border-border bg-bg-elevated px-2.5 py-1.5">
+          <div className="text-xs font-semibold uppercase tracking-wider text-ink-dim">
+            İptal Gün
           </div>
-          <div className="font-display text-base font-bold tabular-nums text-signal-info">
+          <div className="mt-0.5 font-display text-2xl font-black tabular-nums text-signal-info">
             {fmtCompact(sonAy.iptalGun)}
           </div>
         </div>
-        <div className="rounded-md border border-border bg-bg-elevated px-2 py-1">
-          <div className="text-[8px] font-semibold uppercase tracking-wider text-ink-dim">
+        <div className="rounded-lg border border-border bg-bg-elevated px-2.5 py-1.5">
+          <div className="text-xs font-semibold uppercase tracking-wider text-ink-dim">
             Tasarruf
           </div>
-          <div className="font-display text-base font-bold tabular-nums text-signal-ok">
+          <div className="mt-0.5 font-display text-2xl font-black tabular-nums text-signal-ok">
             {sonAy.tasarruf}{' '}
-            <span className="text-[9px] font-normal text-ink-dim">mn ₺</span>
+            <span className="text-[11px] font-normal text-ink-dim">mn ₺</span>
           </div>
         </div>
       </div>
@@ -331,7 +333,7 @@ function DenetimMini() {
               dot={false}
               isAnimationActive={false}
             />
-            <Tooltip contentStyle={{ fontSize: 10 }} />
+            <Tooltip contentStyle={{ fontSize: 12 }} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -361,7 +363,7 @@ function StreamMini({ data }: { data: StreamPoint[] }) {
             tickLine={false}
             axisLine={false}
             width={24}
-            tick={{ fontSize: 8 }}
+            tick={{ fontSize: 11 }}
             tickFormatter={(v: number) => `${Math.round(v)}`}
             domain={['dataMin - 5', 'dataMax + 5']}
           />
@@ -369,7 +371,7 @@ function StreamMini({ data }: { data: StreamPoint[] }) {
             isAnimationActive={false}
             labelFormatter={(t: any) => new Date(t as number).toLocaleTimeString('tr-TR')}
             formatter={(v: number, n) => [`${v.toFixed(1)} mlr ₺`, n]}
-            contentStyle={{ fontSize: 10 }}
+            contentStyle={{ fontSize: 12 }}
           />
           <Area
             type="monotone"
@@ -400,18 +402,18 @@ function StreamMini({ data }: { data: StreamPoint[] }) {
 /** ───── Olay Akışı ───── */
 function OlayAkisiMini({ alarms }: { alarms: AlarmEvent[] }) {
   return (
-    <ul className="flex h-full min-h-0 flex-col gap-0.5 overflow-hidden px-2 py-1 text-[10px]">
-      {alarms.slice(0, 8).map((a) => (
+    <ul className="flex h-full min-h-0 flex-col gap-1 overflow-hidden px-2 py-1.5 text-sm">
+      {alarms.slice(0, 7).map((a) => (
         <motion.li
           key={a.id}
           initial={{ opacity: 0, x: -4 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.25 }}
-          className="grid grid-cols-[auto_1fr_auto] items-center gap-1.5 rounded-md border border-border bg-bg-elevated px-1.5 py-1"
+          className="grid grid-cols-[auto_1fr_auto] items-center gap-2 rounded-md border border-border bg-bg-elevated px-2 py-1.5"
         >
           <span
             className={cn(
-              'inline-flex h-1.5 w-1.5 shrink-0 rounded-full',
+              'inline-flex h-2 w-2 shrink-0 rounded-full',
               a.level === 'bad'
                 ? 'bg-signal-bad'
                 : a.level === 'warn'
@@ -422,7 +424,7 @@ function OlayAkisiMini({ alarms }: { alarms: AlarmEvent[] }) {
             )}
           />
           <span className="truncate text-ink">{a.message}</span>
-          <span className="shrink-0 font-mono text-[8px] text-ink-dim">
+          <span className="shrink-0 font-mono text-[11px] text-ink-dim">
             {a.time.toLocaleTimeString('tr-TR', { hour12: false }).slice(0, 5)}
           </span>
         </motion.li>
@@ -448,9 +450,9 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
     <div
       className="grid w-full gap-2 font-sans"
       style={{
-        height: 'calc(100vh - 4.5rem)',
+        height: 'calc(100vh - 7rem)',
         gridTemplateColumns: 'repeat(12, minmax(0, 1fr))',
-        gridTemplateRows: '1.4fr 1fr',
+        gridTemplateRows: '1.5fr 1fr',
       }}
     >
       {/* ═══ ÜST: SOL 3 SayiPaneli · HARİTA · SAĞ 3 SayiPaneli ═══ */}
@@ -467,8 +469,8 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
           durum="info"
           icon={Building2}
           actions={
-            <span className="flex items-center gap-1 rounded-full bg-signal-info/15 px-1.5 py-0 font-mono text-[9px] font-bold uppercase tracking-wider text-signal-info">
-              <span className="h-1 w-1 animate-pulse rounded-full bg-signal-info" />
+            <span className="flex items-center gap-1.5 rounded-full bg-signal-info/15 px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-wider text-signal-info">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal-info" />
               CANLI
             </span>
           }
@@ -530,8 +532,8 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
         durum="ok"
         className="col-span-2"
         actions={
-          <span className="flex items-center gap-1 font-mono text-[9px] text-signal-info">
-            <span className="h-1 w-1 animate-pulse rounded-full bg-signal-info" />
+          <span className="flex items-center gap-1.5 rounded-full bg-signal-info/15 px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-wider text-signal-info">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal-info" />
             LIVE
           </span>
         }
@@ -560,43 +562,43 @@ function ScadaHeader({ s }: { s: ScadaState }) {
   const aktifPasif = ozet.aktifSigortali / ozet.pasifSigortali;
 
   return (
-    <header className="mb-2 flex items-center justify-between gap-3 rounded-xl border border-border bg-bg-subtle px-3 py-2 shadow-card">
-      <div className="flex items-center gap-3 min-w-0">
-        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-glow">
-          <Activity size={18} strokeWidth={2.4} />
+    <header className="mb-3 flex items-center justify-between gap-4 rounded-xl border border-border bg-bg-subtle px-4 py-3 shadow-card">
+      <div className="flex items-center gap-4 min-w-0">
+        <div className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-glow">
+          <Activity size={26} strokeWidth={2.4} />
         </div>
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="font-display text-sm font-bold leading-none tracking-tight text-ink">
+            <span className="font-display text-2xl font-bold leading-none tracking-tight text-ink">
               SGK · <span className="text-brand-600">Genel Durum</span>
             </span>
-            <span className="hidden items-center gap-1 rounded-full bg-signal-info/12 px-1.5 py-0 font-mono text-[9px] font-bold uppercase tracking-[0.15em] text-signal-info sm:inline-flex">
-              <span className="h-1 w-1 animate-pulse rounded-full bg-signal-info" />
+            <span className="hidden items-center gap-1.5 rounded-full bg-signal-info/12 px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-[0.15em] text-signal-info sm:inline-flex">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal-info" />
               CANLI
             </span>
           </div>
-          <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[10px] text-ink-dim">
+          <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-ink-dim">
             <span>
               Aktif{' '}
-              <span className="font-mono font-semibold text-ink">
+              <span className="font-mono text-base font-bold tabular-nums text-ink">
                 {fmtCompact(ozet.aktifSigortali)}
               </span>
             </span>
             <span>
               Pasif{' '}
-              <span className="font-mono font-semibold text-ink">
+              <span className="font-mono text-base font-bold tabular-nums text-ink">
                 {fmtCompact(ozet.pasifSigortali)}
               </span>
             </span>
             <span>
               Oran{' '}
-              <span className="font-mono font-semibold text-ink">
+              <span className="font-mono text-base font-bold tabular-nums text-ink">
                 {aktifPasif.toFixed(2)}
               </span>
             </span>
             <span>
               Aktüeryal{' '}
-              <span className="font-mono font-semibold text-signal-ok">
+              <span className="font-mono text-base font-bold tabular-nums text-signal-ok">
                 +{s.aktuaryalDenge.toFixed(1)} mlr ₺
               </span>
             </span>
@@ -604,24 +606,24 @@ function ScadaHeader({ s }: { s: ScadaState }) {
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        <div className="hidden items-center gap-1.5 font-mono text-[10px] md:flex">
-          <span className="flex items-center gap-1 rounded-full bg-signal-bad/10 px-1.5 py-0.5 text-signal-bad">
-            <span className="h-1.5 w-1.5 rounded-full bg-signal-bad" />
+      <div className="flex items-center gap-3">
+        <div className="hidden items-center gap-2 font-mono text-sm md:flex">
+          <span className="flex items-center gap-1.5 rounded-full bg-signal-bad/10 px-2.5 py-1 font-semibold text-signal-bad">
+            <span className="h-2 w-2 rounded-full bg-signal-bad" />
             {kritikSayi.toString().padStart(2, '0')} kritik
           </span>
-          <span className="flex items-center gap-1 rounded-full bg-signal-warn/10 px-1.5 py-0.5 text-signal-warn">
-            <span className="h-1.5 w-1.5 rounded-full bg-signal-warn" />
+          <span className="flex items-center gap-1.5 rounded-full bg-signal-warn/10 px-2.5 py-1 font-semibold text-signal-warn">
+            <span className="h-2 w-2 rounded-full bg-signal-warn" />
             {uyariSayi.toString().padStart(2, '0')} uyarı
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-elevated px-2 py-1 font-mono">
-          <Zap size={11} className="text-signal-info" />
-          <span className="text-[11px] font-semibold tabular-nums text-ink">
+        <div className="flex items-center gap-2 rounded-lg border border-border bg-bg-elevated px-3 py-2 font-mono">
+          <Zap size={14} className="text-signal-info" />
+          <span className="text-lg font-bold tabular-nums text-ink">
             {s.time.toLocaleTimeString('tr-TR', { hour12: false })}
           </span>
-          <span className="hidden text-[9px] text-ink-dim sm:inline">
+          <span className="hidden text-xs text-ink-dim sm:inline">
             {s.time.toLocaleDateString('tr-TR', {
               day: '2-digit',
               month: 'short',

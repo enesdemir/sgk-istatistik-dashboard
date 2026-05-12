@@ -227,11 +227,11 @@
   }
   .recharts-cartesian-axis-tick text {
     fill: var(--axis-text) !important;
-    font-size: 11px !important;
+    font-size: 13px !important;
   }
   .recharts-legend-item-text {
     color: rgb(var(--ink-muted)) !important;
-    font-size: 12px !important;
+    font-size: 14px !important;
   }
 }
 
