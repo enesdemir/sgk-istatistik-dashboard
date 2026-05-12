@@ -468,15 +468,14 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
       style={{
         height: 'calc(100vh - 7rem)',
         gridTemplateColumns: 'repeat(12, minmax(0, 1fr))',
-        gridTemplateRows: '1.5fr 1fr',
+        gridTemplateRows: '1.45fr 0.75fr 1fr',
       }}
     >
-      {/* ═══ ÜST: SOL 4 SayiPaneli · HARİTA · SAĞ 4 SayiPaneli ═══ */}
-      <div className="col-span-3 grid min-h-0 grid-rows-4 gap-2">
+      {/* ═══ ROW 1: SOL 2 SayiPaneli · HARİTA · SAĞ 2 SayiPaneli ═══ */}
+      <div className="col-span-3 grid min-h-0 grid-rows-2 gap-2">
+        {/* Eczane Reçete + Hastane Reçete */}
         <SayiPaneli data={sayiPanelleri[0]} />
         <SayiPaneli data={sayiPanelleri[1]} />
-        <SayiPaneli data={sayiPanelleri[2]} />
-        <SayiPaneli data={sayiPanelleri[3]} />
       </div>
 
       <div className="col-span-6 min-h-0">
@@ -498,9 +497,16 @@ function ScadaDashboard({ s }: { s: ScadaState }) {
         </Panel>
       </div>
 
-      <div className="col-span-3 grid min-h-0 grid-rows-4 gap-2">
+      <div className="col-span-3 grid min-h-0 grid-rows-2 gap-2">
+        {/* Aktif İcra Dosya + Denetlenen İş Yeri */}
         <SayiPaneli data={sayiPanelleri[4]} />
         <SayiPaneli data={sayiPanelleri[5]} />
+      </div>
+
+      {/* ═══ ROW 2: 4 SayiPaneli aynı satırda — Emekli / Aktif Sigortalı / Uygulanan Ceza / Bütçe ═══ */}
+      <div className="col-span-12 grid min-h-0 grid-cols-4 gap-2">
+        <SayiPaneli data={sayiPanelleri[2]} />
+        <SayiPaneli data={sayiPanelleri[3]} />
         <SayiPaneli data={sayiPanelleri[6]} />
         <SayiPaneli data={sayiPanelleri[7]} />
       </div>
